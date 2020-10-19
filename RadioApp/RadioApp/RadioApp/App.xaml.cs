@@ -1,4 +1,5 @@
-﻿using RadioApp.Views;
+﻿using RadioApp.DAL;
+using RadioApp.Views;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -13,7 +14,18 @@ namespace RadioApp
 
             MainPage = new MainPage();
         }
-
+        static SqliteDatabase database;
+        public static SqliteDatabase Database
+        {
+            get
+            {
+                if (database == null)
+                {
+                    database = new SqliteDatabase();
+                }
+                return database;
+            }
+        }
         protected override void OnStart()
         {
         }

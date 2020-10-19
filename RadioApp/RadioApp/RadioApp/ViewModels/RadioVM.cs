@@ -6,5 +6,9 @@ namespace RadioApp.ViewModels
 {
     class RadioVM
     {
+        public RadioVM()
+        {
+
+        }
     }
 }
