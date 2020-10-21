@@ -6,3 +6,7 @@ Vi lavede vores scrum team og lavede casen.
 Vi så pluralsight og lavede User story
 19/10
 Vi har lavet Kanban board og backlog og er i gang med at programmere
+20/10
+Jeg er såvidt i gang med at programmere spillet
+21/10
+Jeg har lavet http request til api og er i gang med at præsentere det

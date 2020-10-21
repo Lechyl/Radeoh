@@ -9,6 +9,6 @@ namespace RadioApp.Services
 {
     interface IAPIManager
     {
-        Task<ObservableCollection<RadioStation>> GetRadioStations();
+        Task<List<RadioStation>> GetRadioStations();
     }
 }

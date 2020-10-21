@@ -6,13 +6,14 @@ using RadioApp.Models;
 using RadioApp.Extensions;
 using System.Collections.Generic;
 using RadioApp.Services;
+using System.Collections.ObjectModel;
 
 namespace RadioApp.DAL
 {
     public class SqliteDatabase : ILocalStorage
     {
 
-        public static List<Favorite> FavoriteList { get; set; }
+        public static List<RadioStation> FavoriteList { get; set; }
         static readonly Lazy<SQLiteAsyncConnection> lazyInitializer = new Lazy<SQLiteAsyncConnection>(() =>
         {
             return new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
@@ -23,10 +24,10 @@ namespace RadioApp.DAL
 
         public SqliteDatabase()
         {
-            FavoriteList = new List<Favorite>();
+            FavoriteList = new List<RadioStation>();
             InitializeAsync().SafeFireAndForget(false);
 
-            Database.CreateTableAsync<Favorite>();
+            Database.CreateTableAsync<RadioStation>();
            
         }
 
@@ -42,9 +43,9 @@ namespace RadioApp.DAL
             }
         }
 
-        public async Task<List<Favorite>> GetFavorites()
+        public async Task<List<RadioStation>> GetFavorites()
         {
-            FavoriteList = await Database.Table<Favorite>().ToListAsync();
+            FavoriteList = await Database.Table<RadioStation>().ToListAsync();
             return FavoriteList;
         }
 

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RadioApp.DAL;
 using RadioApp.Models;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace RadioApp.Services
             client = new HttpClient();
         }
 
-        public async Task<ObservableCollection<RadioStation>> GetRadioStations()
+        public async Task<List<RadioStation>> GetRadioStations()
         {
             string apiUrl = "https://radeoh.app/api/stations";
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
@@ -27,7 +28,8 @@ namespace RadioApp.Services
             if (response.IsSuccessStatusCode)
             {
                 string content = await response.Content.ReadAsStringAsync();
-                var dd = JsonConvert.DeserializeObject<ObservableCollection<RadioStation>>(content);
+                var dd = JsonConvert.DeserializeObject<List<RadioStation>>(content);
+                SqliteDatabase.FavoriteList = dd;
                 return dd;
             }
             return null;

@@ -15,7 +15,7 @@ namespace RadioApp.Views
         
         public MainPage()
         {
-            Title = "Master Page";
+            Title = "Home";
             InitializeComponent();
         }
     }

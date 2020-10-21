@@ -28,6 +28,11 @@ namespace RadioApp.Views
             radioVM.GetAllRadioStationsFromAPI();
 
         }
+
+        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            await DisplayAlert(radioVM.RadioStation.Title, "hello", "Ok");
+        }
     }
 
     

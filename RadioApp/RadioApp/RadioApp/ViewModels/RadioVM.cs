@@ -1,5 +1,6 @@
 ﻿using RadioApp.Models;
 using RadioApp.Services;
+using RadioApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +8,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace RadioApp.ViewModels
 {
@@ -29,19 +31,27 @@ namespace RadioApp.ViewModels
             
         }
 
-        private ObservableCollection<RadioStation> _radioStations;
-        public ObservableCollection<RadioStation> RadioStations { get => _radioStations; set { _radioStations = value; OnPropertyChanged(); } }
+        private List<RadioStation> _radioStations;
+        public List<RadioStation> RadioStations { get => _radioStations; set { _radioStations = value; OnPropertyChanged(); } }
 
         private RadioStation _radioStation;
         public RadioStation RadioStation { get => _radioStation; set { _radioStation = value; OnPropertyChanged(); } }
 
-
+        public Command ShowAudioCommand { get; }
 
         public RadioVM()
         {
             api = new API();
-            RadioStations = new ObservableCollection<RadioStation>();
+            RadioStations = new List<RadioStation>();
 
+
+            ShowAudioCommand = new Command<RadioStation>(async (RadioStation rs) =>
+            {
+                this.RadioStation = rs;
+                await Application.Current.MainPage.Navigation.PushModalAsync(
+                new NavigationPage(new AudioPage(new AudioVM(RadioStation))),true);
+
+            });
         }
 
 

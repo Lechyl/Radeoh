@@ -11,8 +11,11 @@ namespace RadioApp
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            MainPage = new MasterDetailPage
+            {
+                Master = new MenuPage(),
+                Detail = new NavigationPage(new RadioPage())
+            };
         }
         static SqliteDatabase database;
         public static SqliteDatabase Database

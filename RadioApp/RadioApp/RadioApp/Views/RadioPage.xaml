@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:RadioApp.Converter"
-             x:Class="RadioApp.Views.RadioPage">
+             x:Class="RadioApp.Views.RadioPage" x:Name="page">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -16,7 +16,7 @@
 
         <StackLayout>
 
-            <ListView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}"  x:Name="RadioStationView" ItemsSource="{Binding RadioStations}" SelectedItem="{Binding RadioStation}">
+            <ListView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}"  x:Name="RadioStationView" ItemsSource="{Binding RadioStations}" SelectionMode="Single" SelectedItem="{Binding RadioStation}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -27,13 +27,15 @@
                                         <ColumnDefinition Width ="5*" />
 
                                     </Grid.ColumnDefinitions>
-
+                                
                                     <Image Grid.Column="0" x:Name="imageview" Source="{Binding Image}" Aspect="Fill" />
                                     <Label Grid.Column="1" Text="{Binding Title}"></Label>
                                     
 
                                 </Grid>
-
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding Source={x:Reference page}, Path=BindingContext.ShowAudioCommand}" CommandParameter="{Binding .}"/>
+                                </StackLayout.GestureRecognizers>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
