@@ -9,12 +9,13 @@ namespace RadioApp.Models
     public class RadioStation
     {
 
-        [JsonProperty("slug"), PrimaryKey]
-        public string Slug { get; set; }
+
 
         [JsonProperty("title")]
         public string Title { get; set; }
 
+        [JsonProperty("slug"), PrimaryKey]
+        public string Slug { get; set; }
         [JsonProperty("country")]
         public string Country { get; set; }
 

@@ -1,12 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:RadioApp.Converter"
              x:Class="RadioApp.Views.RadioPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
+
+
+
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+
+            <ListView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}"  x:Name="RadioStationView" ItemsSource="{Binding RadioStations}" SelectedItem="{Binding RadioStation}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width ="5*" />
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0" x:Name="imageview" Source="{Binding Image}" Aspect="Fill" />
+                                    <Label Grid.Column="1" Text="{Binding Title}"></Label>
+                                    
+
+                                </Grid>
+
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}"
+            VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

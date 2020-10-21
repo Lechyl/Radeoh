@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using RadioApp.Models;
 using RadioApp.Extensions;
 using System.Collections.Generic;
+using RadioApp.Services;
 
 namespace RadioApp.DAL
 {
-    public class SqliteDatabase
+    public class SqliteDatabase : ILocalStorage
     {
 
         public static List<Favorite> FavoriteList { get; set; }

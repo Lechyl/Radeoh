@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace RadioApp.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+       // public event PropertyChangedEventHandler PropertyChanged;
 
         /*     public IApiManager ApiManager;
              IApiService<IRadeohApi> radeohApi = new ApiService<IRadeohApi>(Config.RadeohBaseUrl);

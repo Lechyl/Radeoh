@@ -1,6 +1,7 @@
 ﻿using RadioApp.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,10 +21,14 @@ namespace RadioApp.Views
             Title = "Radio";
             InitializeComponent();
 
-
             radioVM = new RadioVM();
-
+ 
             BindingContext = radioVM;
+
+            radioVM.GetAllRadioStationsFromAPI();
+
         }
     }
+
+    
 }
