@@ -22,6 +22,8 @@ namespace RadioApp.ViewModels
         {
             RadioStation = station;
 
+            //Stop all background radio music if closed wrong
+            Stop();
             BackCommand = new Command(async () => {
                 Stop();
                 await Application.Current.MainPage.Navigation.PopModalAsync();

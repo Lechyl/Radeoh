@@ -10,3 +10,5 @@ Vi har lavet Kanban board og backlog og er i gang med at programmere
 Jeg er såvidt i gang med at programmere spillet
 21/10
 Jeg har lavet http request til api og er i gang med at præsentere det
+22/10
+Jeg har lavet Audio Streaming færdig. Xamarin har så mange ting som de ikke har lavet at man fæler at xamarin er i beta version.
