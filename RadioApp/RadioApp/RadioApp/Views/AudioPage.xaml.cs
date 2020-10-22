@@ -18,7 +18,7 @@ namespace RadioApp.Views
 
         public AudioPage(AudioVM audioViewModel)
         {
-            Title = "Audio Player";
+        
             InitializeComponent();
 
             audioVM = audioViewModel;

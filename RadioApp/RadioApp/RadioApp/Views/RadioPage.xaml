@@ -16,10 +16,11 @@
 
         <StackLayout>
 
-            <ListView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}"  x:Name="RadioStationView" ItemsSource="{Binding RadioStations}" SelectionMode="Single" SelectedItem="{Binding RadioStation}">
+            <ListView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}" x:Name="RadioStationView" ItemsSource="{Binding RadioStations}" SelectionMode="Single" SelectedItem="{Binding RadioStation}" ItemTapped="RadioStationView_ItemTapped"  >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
+                            
                             <StackLayout>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -33,9 +34,8 @@
                                     
 
                                 </Grid>
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding Source={x:Reference page}, Path=BindingContext.ShowAudioCommand}" CommandParameter="{Binding .}"/>
-                                </StackLayout.GestureRecognizers>
+
+
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

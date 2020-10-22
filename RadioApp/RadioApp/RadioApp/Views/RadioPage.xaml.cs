@@ -14,7 +14,6 @@ namespace RadioApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RadioPage : ContentPage
     {
-
         RadioVM radioVM;
         public RadioPage()
         {
@@ -33,6 +32,19 @@ namespace RadioApp.Views
         {
             await DisplayAlert(radioVM.RadioStation.Title, "hello", "Ok");
         }
+
+        private void RadioStationView_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (!radioVM.IsBusy)
+            {
+                radioVM.IsBusy = true;
+                radioVM.ShowAudioCommand.Execute(null);
+
+            }
+
+        }
+
+
     }
 
     

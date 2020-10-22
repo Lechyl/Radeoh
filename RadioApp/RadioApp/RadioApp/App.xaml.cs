@@ -11,6 +11,7 @@ namespace RadioApp
         public App()
         {
             InitializeComponent();
+
             MainPage = new MasterDetailPage
             {
                 Master = new MenuPage(),

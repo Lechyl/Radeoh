@@ -18,7 +18,8 @@ namespace RadioApp.ViewModels
         public API api;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
+        public bool IsBusy { get; set; }
+         
         private bool _isLoading = false;
         public bool IsLoading 
         { 
@@ -43,14 +44,13 @@ namespace RadioApp.ViewModels
         {
             api = new API();
             RadioStations = new List<RadioStation>();
+            IsBusy = false;
 
-
-            ShowAudioCommand = new Command<RadioStation>(async (RadioStation rs) =>
+            ShowAudioCommand = new Command(async () =>
             {
-                this.RadioStation = rs;
                 await Application.Current.MainPage.Navigation.PushModalAsync(
-                new NavigationPage(new AudioPage(new AudioVM(RadioStation))),true);
-
+                new AudioPage(new AudioVM(RadioStation)),true);
+                IsBusy = false;
             });
         }
 
