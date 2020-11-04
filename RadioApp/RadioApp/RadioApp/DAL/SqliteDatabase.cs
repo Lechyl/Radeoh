@@ -13,7 +13,7 @@ namespace RadioApp.DAL
     public class SqliteDatabase : ILocalStorage
     {
 
-        public static List<RadioStation> FavoriteList { get; set; }
+        public static List<Favorite> FavoriteList { get; set; }
         static readonly Lazy<SQLiteAsyncConnection> lazyInitializer = new Lazy<SQLiteAsyncConnection>(() =>
         {
             return new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
@@ -24,10 +24,10 @@ namespace RadioApp.DAL
 
         public SqliteDatabase()
         {
-            FavoriteList = new List<RadioStation>();
+            FavoriteList = new List<Favorite>();
             InitializeAsync().SafeFireAndForget(false);
 
-            Database.CreateTableAsync<RadioStation>();
+            Database.CreateTableAsync<Favorite>();
            
         }
 
@@ -35,34 +35,48 @@ namespace RadioApp.DAL
         {
             if (!initialized)
             {
-                if (!Database.TableMappings.Any(m => m.MappedType.Name == typeof(RadioStation).Name))
+                if (!Database.TableMappings.Any(m => m.MappedType.Name == typeof(Favorite).Name))
                 {
-                    await Database.CreateTablesAsync(CreateFlags.None, typeof(RadioStation)).ConfigureAwait(false);
+                    await Database.CreateTablesAsync(CreateFlags.None, typeof(Favorite)).ConfigureAwait(false);
                 }
                 initialized = true;
             }
         }
 
-        public async Task<List<RadioStation>> GetFavorites()
+        public async Task<List<Favorite>> GetFavorites()
         {
-            FavoriteList = await Database.Table<RadioStation>().ToListAsync();
+            FavoriteList = await Database.Table<Favorite>().ToListAsync();
             return FavoriteList;
         }
 
         public async Task<int> SaveFavorite(RadioStation station)
         {
-            if(!FavoriteList.Exists(x => x.Slug == station.Slug))
+            Favorite favorite = new Favorite();
+            favorite.Slug = station.Slug;
+            if(FavoriteList.Count > 0)
             {
-                return await Database.InsertAsync(station.Slug);
+                if (!FavoriteList.Exists(x => x.Slug == station.Slug))
+                {
+                    return await Database.InsertAsync(favorite);
+
+                }
+            }
+            else
+            {
+                
+                return await Database.InsertAsync(favorite);
 
             }
+
             return 0;
         }
 
         public async Task<int> DeleteFavorite(RadioStation station)
         {
             FavoriteList.RemoveAll(x => x.Slug == station.Slug);
-            return await Database.DeleteAsync(station);
+            Favorite favorite = new Favorite();
+            favorite.Slug = station.Slug;
+            return await Database.DeleteAsync(favorite);
         }
     }
 }

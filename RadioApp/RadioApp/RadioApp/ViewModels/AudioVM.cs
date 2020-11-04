@@ -7,37 +7,56 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Xamarin.Forms;
 using MediaManager;
+using RadioApp.DAL;
 
 namespace RadioApp.ViewModels
 {
     public class AudioVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
+        public SqliteDatabase db;
         private bool _isPlaying;
         public bool IsPlaying { get => _isPlaying; set { _isPlaying = value; OnPropertyChanged(); } }
-        public Command StopPlayCommand { get; }
+
+
+        private bool _isFavorite;
+        public bool IsFavorite { get => _isFavorite; set { _isFavorite = value; OnPropertyChanged(); } }
+
         public Command BackCommand { get; }
+        public Command AddFavorite { get; }
+        public Command RemoveFavorite { get; }
         private RadioStation _radioStation;
         public RadioStation RadioStation { get => _radioStation; set { _radioStation = value; OnPropertyChanged(); } }
 
         public AudioVM(RadioStation station)
         {
-            IsPlaying = false;
-            RadioStation = station;
 
-            //Stop all background radio music if closed wrong
-            Stop();
+            StartOptions(station);
             BackCommand = new Command(async () => {
                 Stop();
                 await Application.Current.MainPage.Navigation.PopModalAsync();
             });
+            AddFavorite = new Command(async () => {
+                await db.SaveFavorite(RadioStation);
+            });
+            RemoveFavorite = new Command(async () =>
+            {
+                await db.DeleteFavorite(RadioStation);
+            });
 
 
+        }
+        public void StartOptions(RadioStation station)
+        {
+            db = new SqliteDatabase();
+            IsPlaying = false;
+            RadioStation = station;
+            IsFavorite = station.Favorite;
+            //Stop all background radio music if closed wrong
+            Stop();
             Play();
 
         }
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             //Invoke/Raise Event of the specific method name
@@ -53,13 +72,13 @@ namespace RadioApp.ViewModels
             IsPlaying = true;
         }
 
-        public async void Stop()
+        public void Stop()
         {
             if (IsPlaying)
             {
 
                 IsPlaying = false;
-                await CrossMediaManager.Current.Stop();
+                CrossMediaManager.Current.Stop();
             }
 
         }

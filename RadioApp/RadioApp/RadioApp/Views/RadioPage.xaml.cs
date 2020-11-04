@@ -24,7 +24,6 @@ namespace RadioApp.Views
  
             BindingContext = radioVM;
 
-            radioVM.GetAllRadioStationsFromAPI();
 
         }
 

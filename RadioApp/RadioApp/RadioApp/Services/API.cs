@@ -15,7 +15,7 @@ namespace RadioApp.Services
     {
         private HttpClient client;
 
-        public  API()
+        public API()
         { 
             client = new HttpClient();
         }
@@ -28,9 +28,8 @@ namespace RadioApp.Services
             if (response.IsSuccessStatusCode)
             {
                 string content = await response.Content.ReadAsStringAsync();
-                var dd = JsonConvert.DeserializeObject<List<RadioStation>>(content);
-                SqliteDatabase.FavoriteList = dd;
-                return dd;
+                var RadioStations = JsonConvert.DeserializeObject<List<RadioStation>>(content);
+                return RadioStations;
             }
             return null;
         }

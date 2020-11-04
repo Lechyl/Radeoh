@@ -8,7 +8,7 @@ namespace RadioApp.Services
 {
     interface ILocalStorage
     {
-          Task<List<RadioStation>> GetFavorites();
+          Task<List<Favorite>> GetFavorites();
 
           Task<int> SaveFavorite(RadioStation station);
 

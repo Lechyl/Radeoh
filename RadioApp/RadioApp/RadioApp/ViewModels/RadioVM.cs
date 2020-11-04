@@ -1,10 +1,12 @@
-﻿using RadioApp.Models;
+﻿using RadioApp.DAL;
+using RadioApp.Models;
 using RadioApp.Services;
 using RadioApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +18,7 @@ namespace RadioApp.ViewModels
     {
 
         public API api;
-
+        public SqliteDatabase db;
         public event PropertyChangedEventHandler PropertyChanged;
         public bool IsBusy { get; set; }
          
@@ -32,6 +34,9 @@ namespace RadioApp.ViewModels
             
         }
 
+        private bool _isRefreshing = false;
+        public bool IsRefreshing { get => _isRefreshing; set { _isRefreshing = value; OnPropertyChanged(); } }
+
         private List<RadioStation> _radioStations;
         public List<RadioStation> RadioStations { get => _radioStations; set { _radioStations = value; OnPropertyChanged(); } }
 
@@ -39,21 +44,37 @@ namespace RadioApp.ViewModels
         public RadioStation RadioStation { get => _radioStation; set { _radioStation = value; OnPropertyChanged(); } }
 
         public Command ShowAudioCommand { get; }
-
+        public Command RefreshCommand { get; }
         public RadioVM()
         {
-            api = new API();
-            RadioStations = new List<RadioStation>();
-            IsBusy = false;
+
+            StartOptions();
 
             ShowAudioCommand = new Command(async () =>
             {
                 await Application.Current.MainPage.Navigation.PushModalAsync(
-                new AudioPage(new AudioVM(RadioStation)),true);
+                new AudioPage(new AudioVM(RadioStation)), true);
                 IsBusy = false;
             });
-        }
+            RefreshCommand = new Command( () =>
+            {
+                IsRefreshing = true;
+                 GetAllRadioStationsFromAPI();
+                IsRefreshing = false;
+            });
 
+
+        }
+        private void StartOptions()
+        {
+            api = new API();
+            db = new SqliteDatabase();
+            RadioStations = new List<RadioStation>();
+            IsBusy = false;
+
+            GetAllRadioStationsFromAPI();
+
+        }
 
         public async void GetAllRadioStationsFromAPI()
         {
@@ -62,7 +83,21 @@ namespace RadioApp.ViewModels
             try
             {
                 RadioStations = await api.GetRadioStations();
+                List<Favorite> FavoriteSlugs = await db.GetFavorites();
+                if(FavoriteSlugs.Count > 0)
+                {
+                    for (int i = 0; i < FavoriteSlugs.Count; i++)
+                    {
+                        for (int x = 0; x < RadioStations.Count; x++)
+                        {
+                            if(RadioStations[x].Slug == FavoriteSlugs[i].Slug)
+                            {
+                                RadioStations[x].Favorite = true;
 
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception)
             {
@@ -71,6 +106,7 @@ namespace RadioApp.ViewModels
             IsLoading = false;
 
         }
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             //Invoke/Raise Event of the specific method name

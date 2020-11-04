@@ -33,5 +33,7 @@ namespace RadioApp.Models
 
         [JsonProperty("stream_url")]
         public object StreamUrl { get; set; }
+
+        public bool Favorite = false;
     }
 }

@@ -12,11 +12,9 @@
 
     <ContentPage.Content>
 
-
-
         <StackLayout>
 
-            <ListView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}" x:Name="RadioStationView" ItemsSource="{Binding RadioStations}" SelectionMode="Single" SelectedItem="{Binding RadioStation}" ItemTapped="RadioStationView_ItemTapped"  >
+            <ListView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}" IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}" x:Name="RadioStationView" ItemsSource="{Binding RadioStations}" SelectionMode="Single" SelectedItem="{Binding RadioStation}" ItemTapped="RadioStationView_ItemTapped"  >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
