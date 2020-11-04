@@ -14,3 +14,6 @@ Jeg har lavet http request til api og er i gang med at præsentere det
 Jeg har lavet Audio Streaming færdig. Xamarin har så mange ting som de ikke har lavet at man fæler at xamarin er i beta version.
 23/10
 Jeg har hørt fremlæggelse og testet min Radio spiller og fundet features
+4/11
+Sprint 2 jeg har lavet Save og Delete favorite i UI/UX og har lavet Message center til at update station list samt
+Lavet hjemmelavet Mapper.

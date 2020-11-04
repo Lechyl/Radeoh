@@ -9,7 +9,19 @@ namespace RadioApp.Models
     {
         [PrimaryKey]
         public string Slug { get; set; }
+        public string Title { get; set; }
 
+        public string Country { get; set; }
+
+        public string Lang { get; set; }
+
+        public string Image { get; set; }
+
+        public object Subtext { get; set; }
+
+        public object Bitrate { get; set; }
+
+        public object StreamUrl { get; set; }
 
     }
 }

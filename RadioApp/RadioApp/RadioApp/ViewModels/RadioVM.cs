@@ -63,7 +63,9 @@ namespace RadioApp.ViewModels
                 IsRefreshing = false;
             });
 
-
+            MessagingCenter.Subscribe<object, RadioStation>(this, "UpdateFavorite", (sender, arg) => {
+                RadioStations.Find(x => x.Slug == arg.Slug).Favorite = arg.Favorite;
+            });
         }
         private void StartOptions()
         {

@@ -7,6 +7,7 @@ using RadioApp.Extensions;
 using System.Collections.Generic;
 using RadioApp.Services;
 using System.Collections.ObjectModel;
+using RadioApp.Converter;
 
 namespace RadioApp.DAL
 {
@@ -51,8 +52,7 @@ namespace RadioApp.DAL
 
         public async Task<int> SaveFavorite(RadioStation station)
         {
-            Favorite favorite = new Favorite();
-            favorite.Slug = station.Slug;
+            Favorite favorite = Mapper.Map(station);
             if(FavoriteList.Count > 0)
             {
                 if (!FavoriteList.Exists(x => x.Slug == station.Slug))
@@ -74,8 +74,7 @@ namespace RadioApp.DAL
         public async Task<int> DeleteFavorite(RadioStation station)
         {
             FavoriteList.RemoveAll(x => x.Slug == station.Slug);
-            Favorite favorite = new Favorite();
-            favorite.Slug = station.Slug;
+            Favorite favorite = Mapper.Map(station);
             return await Database.DeleteAsync(favorite);
         }
     }

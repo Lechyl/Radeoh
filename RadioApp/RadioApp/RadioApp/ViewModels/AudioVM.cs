@@ -38,10 +38,18 @@ namespace RadioApp.ViewModels
             });
             AddFavorite = new Command(async () => {
                 await db.SaveFavorite(RadioStation);
+                IsFavorite = true;
+                RadioStation.Favorite = true;
+
+                MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
             });
             RemoveFavorite = new Command(async () =>
             {
                 await db.DeleteFavorite(RadioStation);
+                IsFavorite = false;
+                RadioStation.Favorite = false;
+                MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
+
             });
 
 
