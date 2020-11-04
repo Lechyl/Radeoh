@@ -27,11 +27,11 @@
             x:Name="BackButton"
             Grid.Column="0"
             Grid.Row="0"
-            Margin="10"
-            FontSize="20"
+            Margin="10,0"
+            FontSize="40"
             HorizontalOptions="FillAndExpand"
             HorizontalTextAlignment="Start"
-            Text="Back"
+            Text="&lt;"
             TextColor="White">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding BackCommand}"/>
@@ -53,9 +53,11 @@
         </Grid>
         <StackLayout Grid.Row="1">
             <Label Text="{Binding RadioStation.Title, StringFormat='Playing {0} . . .'}"
-                VerticalOptions="CenterAndExpand" 
+                   Margin="50"
+                VerticalOptions="Center" 
                 HorizontalOptions="CenterAndExpand"></Label>
-        
+            <ActivityIndicator IsVisible="{Binding IsPlaying}" IsRunning="{Binding IsPlaying}"
+            />
         </StackLayout>
     </Grid>
 

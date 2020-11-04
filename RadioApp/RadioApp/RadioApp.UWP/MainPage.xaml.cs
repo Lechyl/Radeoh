@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediaManager;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace RadioApp.UWP
         public MainPage()
         {
             this.InitializeComponent();
+            CrossMediaManager.Current.Init();
 
             LoadApplication(new RadioApp.App());
         }

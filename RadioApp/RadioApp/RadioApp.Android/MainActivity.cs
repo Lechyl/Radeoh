@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using MediaManager;
 
 namespace RadioApp.Droid
 {
@@ -22,7 +23,7 @@ namespace RadioApp.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            //  CrossMediaManager.Current.Init(this);
+            CrossMediaManager.Current.Init(this);
            // CrossMediaManager.Current.Init(this,savedInstanceState);
             LoadApplication(new App());
         }

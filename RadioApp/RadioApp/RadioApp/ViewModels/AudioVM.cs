@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Xamarin.Forms;
+using MediaManager;
 
 namespace RadioApp.ViewModels
 {
@@ -13,6 +14,8 @@ namespace RadioApp.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private bool _isPlaying;
+        public bool IsPlaying { get => _isPlaying; set { _isPlaying = value; OnPropertyChanged(); } }
         public Command StopPlayCommand { get; }
         public Command BackCommand { get; }
         private RadioStation _radioStation;
@@ -20,6 +23,7 @@ namespace RadioApp.ViewModels
 
         public AudioVM(RadioStation station)
         {
+            IsPlaying = false;
             RadioStation = station;
 
             //Stop all background radio music if closed wrong
@@ -31,7 +35,7 @@ namespace RadioApp.ViewModels
 
 
             Play();
-             
+
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
@@ -42,17 +46,22 @@ namespace RadioApp.ViewModels
 
         }
 
-        public void Play()
+        public async void Play()
         {
-            //We are going to use this interface as a Dependency Injection. This means we are going to implement it separately in each plataform: iOS and Android.
-            DependencyService.Get<IStreaming>().DataSource = RadioStation.StreamUrl.ToString();
 
-            DependencyService.Get<IStreaming>().Play();
+            await CrossMediaManager.Current.Play(RadioStation.StreamUrl);
+            IsPlaying = true;
         }
 
-        public void Stop()
+        public async void Stop()
         {
-            DependencyService.Get<IStreaming>().Stop();
+            if (IsPlaying)
+            {
+
+                IsPlaying = false;
+                await CrossMediaManager.Current.Stop();
+            }
+
         }
     }
 }
