@@ -1,2 +1,2 @@
 # Radeoh
-Xamarin app for Android &amp; UWP utilizing 
+Xamarin Radio app for Android &amp; UWP utilizing 
