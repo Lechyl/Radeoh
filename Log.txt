@@ -17,3 +17,5 @@ Jeg har hørt fremlæggelse og testet min Radio spiller og fundet features
 4/11
 Sprint 2 jeg har lavet Save og Delete favorite i UI/UX og har lavet Message center til at update station list samt
 Lavet hjemmelavet Mapper.
+5/11
+I dag har jeg lavet Notifikation til Add/remove favorite og lavet Favorite listen. samt Optimere min Favorite funktioner

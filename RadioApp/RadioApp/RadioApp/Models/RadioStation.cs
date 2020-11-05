@@ -9,8 +9,6 @@ namespace RadioApp.Models
     public class RadioStation
     {
 
-
-
         [JsonProperty("title")]
         public string Title { get; set; }
 

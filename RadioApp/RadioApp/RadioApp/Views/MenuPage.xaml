@@ -4,9 +4,34 @@
              x:Class="RadioApp.Views.MenuPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
+            <Label Text="Favorite list"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
+            <ListView  x:Name="FavoriteView" ItemsSource="{Binding Favorites}" SelectionMode="Single" SelectedItem="{Binding SelectedFavorite}" ItemTapped="FavoriteView_ItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+
+                            <StackLayout>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width ="5*" />
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0" x:Name="imageview" Source="{Binding Image}" Aspect="Fill" />
+                                    <Label Grid.Column="1" Text="{Binding Title}"></Label>
+
+
+                                </Grid>
+
+
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

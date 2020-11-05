@@ -8,6 +8,7 @@ using System.Text;
 using Xamarin.Forms;
 using MediaManager;
 using RadioApp.DAL;
+using System.Threading.Tasks;
 
 namespace RadioApp.ViewModels
 {
@@ -18,13 +19,19 @@ namespace RadioApp.ViewModels
         private bool _isPlaying;
         public bool IsPlaying { get => _isPlaying; set { _isPlaying = value; OnPropertyChanged(); } }
 
-
         private bool _isFavorite;
         public bool IsFavorite { get => _isFavorite; set { _isFavorite = value; OnPropertyChanged(); } }
+
+        private string _notificationText;
+        public string NotificationText { get => _notificationText; set { _notificationText = value; OnPropertyChanged(); } }
+
+        private bool _isNotification = false;
+        public bool IsNotification { get => _isNotification; set { _isNotification = value; OnPropertyChanged(); } }
 
         public Command BackCommand { get; }
         public Command AddFavorite { get; }
         public Command RemoveFavorite { get; }
+        public Command DisableNotificationCommand { get; }
         private RadioStation _radioStation;
         public RadioStation RadioStation { get => _radioStation; set { _radioStation = value; OnPropertyChanged(); } }
 
@@ -40,6 +47,7 @@ namespace RadioApp.ViewModels
                 await db.SaveFavorite(RadioStation);
                 IsFavorite = true;
                 RadioStation.Favorite = true;
+                ShowNotification("Radio Channel Added To Favorite");
 
                 MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
             });
@@ -48,9 +56,14 @@ namespace RadioApp.ViewModels
                 await db.DeleteFavorite(RadioStation);
                 IsFavorite = false;
                 RadioStation.Favorite = false;
+                ShowNotification("Radio Channel Removed From Favorite");
                 MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
 
             });
+            DisableNotificationCommand = new Command(() =>
+           {
+               HideNotification();
+           });
 
 
         }
@@ -63,6 +76,18 @@ namespace RadioApp.ViewModels
             //Stop all background radio music if closed wrong
             Stop();
             Play();
+
+        }
+
+        private void ShowNotification(string message)
+        {
+            NotificationText = message;
+            IsNotification = true;
+        }
+
+        private void HideNotification()
+        {
+            IsNotification = false;
 
         }
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")

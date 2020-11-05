@@ -41,6 +41,7 @@
                     <TapGestureRecognizer Command="{Binding BackCommand}"/>
                 </Label.GestureRecognizers>
             </Label>
+            
             <Label
             IsVisible="{Binding IsFavorite}"
             VerticalOptions="CenterAndExpand"
@@ -77,6 +78,19 @@
 
         </Grid>
         <StackLayout Grid.Row="1">
+            <Frame BackgroundColor="Gray" IsVisible="{Binding IsNotification}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1" BackgroundColor="Gray" HorizontalOptions="End" TextColor="White" WidthRequest="50" Text="x" Command="{Binding DisableNotificationCommand}"></Button>
+                    <Label Grid.Column="0" VerticalOptions="Center" HorizontalOptions="End" TextColor="White" Text="{Binding NotificationText}"></Label>
+
+                </Grid>
+            </Frame>
+
             <Label Text="{Binding RadioStation.Title, StringFormat='Playing {0} . . .'}"
                    Margin="50"
                 VerticalOptions="Center" 

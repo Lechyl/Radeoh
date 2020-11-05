@@ -29,7 +29,7 @@ namespace RadioApp.DAL
             InitializeAsync().SafeFireAndForget(false);
 
             Database.CreateTableAsync<Favorite>();
-           
+
         }
 
         async Task InitializeAsync()
@@ -46,27 +46,40 @@ namespace RadioApp.DAL
 
         public async Task<List<Favorite>> GetFavorites()
         {
-            FavoriteList = await Database.Table<Favorite>().ToListAsync();
+            try
+            {
+                FavoriteList = await Database.Table<Favorite>().ToListAsync();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             return FavoriteList;
         }
 
         public async Task<int> SaveFavorite(RadioStation station)
         {
-            Favorite favorite = Mapper.Map(station);
-            if(FavoriteList.Count > 0)
+            Favorite favorite = new Favorite();
+            favorite = Mapper.Map(station);
+
+            if (!FavoriteList.Exists(x => x.Slug == station.Slug))
             {
-                if (!FavoriteList.Exists(x => x.Slug == station.Slug))
+                FavoriteList.Add(favorite);
+                try
                 {
                     return await Database.InsertAsync(favorite);
 
                 }
-            }
-            else
-            {
-                
-                return await Database.InsertAsync(favorite);
+                catch (Exception)
+                {
+
+                    throw;
+                }
 
             }
+
 
             return 0;
         }
@@ -74,8 +87,18 @@ namespace RadioApp.DAL
         public async Task<int> DeleteFavorite(RadioStation station)
         {
             FavoriteList.RemoveAll(x => x.Slug == station.Slug);
-            Favorite favorite = Mapper.Map(station);
-            return await Database.DeleteAsync(favorite);
+            Favorite favorite = new Favorite();
+            favorite = Mapper.Map(station);
+            try
+            {
+                return await Database.DeleteAsync(favorite);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

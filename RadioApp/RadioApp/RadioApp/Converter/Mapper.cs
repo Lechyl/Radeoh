@@ -9,16 +9,16 @@ namespace RadioApp.Converter
     {
         public static Favorite Map(RadioStation rs)
         {
+
+
             Favorite favorite = new Favorite()
             {
-                Slug = rs.Slug,
-                Title = rs.Title,
-                Bitrate = rs.Bitrate,
-                Country = rs.Country,
-                StreamUrl = rs.StreamUrl,
-                Subtext = rs.Subtext,
-                Image = rs.Image,
-                Lang = rs.Lang
+                Slug = rs.Slug ?? "",
+                Title = rs.Title ?? "",
+                Country = rs.Country ?? "",
+                StreamUrl = rs.StreamUrl.ToString() ?? "" ,
+                Image = rs.Image ?? "",
+                Lang = rs.Lang ?? ""
             };
             return favorite;
         }
@@ -28,13 +28,11 @@ namespace RadioApp.Converter
             RadioStation radioStation = new RadioStation()
             {
                 Slug = rs.Slug,
-                Title = rs.Title,
-                Bitrate = rs.Bitrate,
-                Country = rs.Country,
-                StreamUrl = rs.StreamUrl,
-                Subtext = rs.Subtext,
-                Image = rs.Image,
-                Lang = rs.Lang,
+                   Title = rs.Title,
+                   Country = rs.Country,
+                   StreamUrl = rs.StreamUrl,
+                   Image = rs.Image,
+                   Lang = rs.Lang,
                 Favorite = true
             };
             return radioStation;
