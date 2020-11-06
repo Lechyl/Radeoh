@@ -19,3 +19,6 @@ Sprint 2 jeg har lavet Save og Delete favorite i UI/UX og har lavet Message cent
 Lavet hjemmelavet Mapper.
 5/11
 I dag har jeg lavet Notifikation til Add/remove favorite og lavet Favorite listen. samt Optimere min Favorite funktioner
+6/11
+I dag ahr jeg fikset Onpropertychanged på listview og changed backgroundcolor af masterdetailpage
+ + Android hardware backbutton som skal fungere som Back funktion på audiopage
