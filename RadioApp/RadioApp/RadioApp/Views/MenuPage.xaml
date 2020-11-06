@@ -5,6 +5,8 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Favorite list"
+                   TextColor="Black"
+                   FontAttributes="Bold"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
             <ListView  x:Name="FavoriteView" ItemsSource="{Binding Favorites}" SelectionMode="Single" SelectedItem="{Binding SelectedFavorite}" ItemTapped="FavoriteView_ItemTapped">

@@ -14,7 +14,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <BoxView BackgroundColor="#2ac2c5" />
+        <BoxView BackgroundColor="Black" />
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>

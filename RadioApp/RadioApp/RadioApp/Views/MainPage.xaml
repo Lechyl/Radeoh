@@ -4,9 +4,9 @@
 
                   >
     <MasterDetailPage.Master>
-        <views:MenuPage />
+        <views:MenuPage BackgroundColor="Black" />
     </MasterDetailPage.Master>
-    <MasterDetailPage.Detail>
+    <MasterDetailPage.Detail >
         <NavigationPage>
             <x:Arguments>
                 <views:RadioPage />
