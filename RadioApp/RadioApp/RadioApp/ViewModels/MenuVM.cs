@@ -4,7 +4,9 @@ using RadioApp.Models;
 using RadioApp.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Xamarin.Forms;
@@ -16,8 +18,16 @@ namespace RadioApp.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         public Favorite SelectedFavorite { get; set; }
 
-        private List<Favorite> _favorites;
-        public List<Favorite> Favorites { get => _favorites; set { _favorites = value; OnPropertyChanged(); } }
+        private ObservableCollection<Favorite> _favorites;
+        public ObservableCollection<Favorite> Favorites 
+        {
+            get => _favorites; 
+            set 
+            { 
+                _favorites = value; 
+                OnPropertyChanged(); 
+            } 
+        }
 
         public Command ShowFavoriteCommand { get; }
 
@@ -38,10 +48,14 @@ namespace RadioApp.ViewModels
                 if (arg.Favorite)
                 {
                     Favorites.Add(Mapper.Map(arg));
+                //    OnPropertyChanged(nameof(Favorites));
+
                 }
                 else
                 {
-                    Favorites.RemoveAll(x => x.Slug == arg.Slug);
+                    Favorites.Remove(Favorites.Where(x => x.Slug == arg.Slug).Single());
+                  //  OnPropertyChanged(nameof(Favorites));
+
                 }
 
             });
@@ -49,8 +63,8 @@ namespace RadioApp.ViewModels
         private async void StartOptions()
         {
             sqliteDatabase = new SqliteDatabase();
-            Favorites = new List<Favorite>();
-            Favorites = await sqliteDatabase.GetFavorites();
+            Favorites = new ObservableCollection<Favorite>(await sqliteDatabase.GetFavorites());
+           
 
 
 
