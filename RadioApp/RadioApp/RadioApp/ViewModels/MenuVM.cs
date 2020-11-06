@@ -48,13 +48,11 @@ namespace RadioApp.ViewModels
                 if (arg.Favorite)
                 {
                     Favorites.Add(Mapper.Map(arg));
-                //    OnPropertyChanged(nameof(Favorites));
 
                 }
                 else
                 {
                     Favorites.Remove(Favorites.Where(x => x.Slug == arg.Slug).Single());
-                  //  OnPropertyChanged(nameof(Favorites));
 
                 }
 

@@ -27,18 +27,24 @@ namespace RadioApp.Views
 
 
         }
-     /*   public AudioPage()
+        /*   public AudioPage()
+           {
+               Title = "Audio Player";
+
+               InitializeComponent();
+
+               audioVM = new AudioVM();
+               audioVM.RadioStation.Title = "hello";
+               BindingContext = audioVM;
+
+
+           }*/
+
+        //only Works on Android
+        protected override bool OnBackButtonPressed()
         {
-            Title = "Audio Player";
-
-            InitializeComponent();
-            
-            audioVM = new AudioVM();
-            audioVM.RadioStation.Title = "hello";
-            BindingContext = audioVM;
-
-
-        }*/
-
+            audioVM.BackCommand.Execute(null);
+            return true;
+        }
     }
 }

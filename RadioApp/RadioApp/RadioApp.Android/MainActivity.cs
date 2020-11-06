@@ -33,5 +33,7 @@ namespace RadioApp.Droid
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
+
     }
 }

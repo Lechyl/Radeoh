@@ -86,7 +86,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Button Grid.Column="1" BackgroundColor="Gray" HorizontalOptions="End" TextColor="White" WidthRequest="50" Text="x" Command="{Binding DisableNotificationCommand}"></Button>
-                    <Label Grid.Column="0" VerticalOptions="Center" HorizontalOptions="End" TextColor="White" Text="{Binding NotificationText}"></Label>
+                    <Label Grid.Column="0"  VerticalOptions="Center" HorizontalOptions="End" TextColor="White" FontAttributes="Bold" Text="{Binding NotificationText}"></Label>
 
                 </Grid>
             </Frame>
