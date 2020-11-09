@@ -22,3 +22,5 @@ I dag har jeg lavet Notifikation til Add/remove favorite og lavet Favorite liste
 6/11
 I dag ahr jeg fikset Onpropertychanged på listview og changed backgroundcolor af masterdetailpage
  + Android hardware backbutton som skal fungere som Back funktion på audiopage
+7/11
+Jeg har lavet Local Images til at indikere favoriteliste, ser grimt ud på UWP

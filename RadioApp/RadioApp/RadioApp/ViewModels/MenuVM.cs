@@ -42,6 +42,7 @@ namespace RadioApp.ViewModels
                 await Application.Current.MainPage.Navigation.PushModalAsync(new AudioPage(new AudioVM(radioStation)), true);
             });
 
+            //Subscribe to a MessagingCenter Channel
             MessagingCenter.Subscribe<object, RadioStation>(this, "UpdateFavorite", (sender, arg) => 
             {
 
@@ -58,6 +59,8 @@ namespace RadioApp.ViewModels
 
             });
         }
+
+        //Start up options
         private async void StartOptions()
         {
             sqliteDatabase = new SqliteDatabase();

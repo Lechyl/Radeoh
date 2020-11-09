@@ -40,7 +40,7 @@ namespace RadioApp.Views
 
            }*/
 
-        //only Works on Android
+        //Using the back button on Android Hardware only Works on Android because IOS and UWP doesn't have a native back button
         protected override bool OnBackButtonPressed()
         {
             audioVM.BackCommand.Execute(null);

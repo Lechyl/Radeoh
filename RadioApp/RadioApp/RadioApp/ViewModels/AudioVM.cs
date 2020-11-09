@@ -37,26 +37,34 @@ namespace RadioApp.ViewModels
 
         public AudioVM(RadioStation station)
         {
-
+            //Init statements
             StartOptions(station);
+
+
             BackCommand = new Command(async () => {
                 Stop();
+                //Pop Modal
                 await Application.Current.MainPage.Navigation.PopModalAsync();
             });
+
             AddFavorite = new Command(async () => {
                 await db.SaveFavorite(RadioStation);
                 IsFavorite = true;
                 RadioStation.Favorite = true;
                 ShowNotification("Radio Channel Added To Favorite");
 
+                //Send Message to a MessagingCenter Channel
                 MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
             });
+
             RemoveFavorite = new Command(async () =>
             {
                 await db.DeleteFavorite(RadioStation);
                 IsFavorite = false;
                 RadioStation.Favorite = false;
                 ShowNotification("Radio Channel Removed From Favorite");
+
+                //Send Message to a MessagingCenter Channel
                 MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
 
             });
@@ -67,6 +75,8 @@ namespace RadioApp.ViewModels
 
 
         }
+
+        //Start Up Options
         public void StartOptions(RadioStation station)
         {
             db = new SqliteDatabase();
@@ -79,12 +89,13 @@ namespace RadioApp.ViewModels
 
         }
 
+        //Show Notification popup
         private void ShowNotification(string message)
         {
             NotificationText = message;
             IsNotification = true;
         }
-
+        //Hide Notification Popup
         private void HideNotification()
         {
             IsNotification = false;
@@ -98,6 +109,8 @@ namespace RadioApp.ViewModels
 
         }
 
+
+        //Play Music/Radio
         public async void Play()
         {
 
@@ -105,6 +118,9 @@ namespace RadioApp.ViewModels
             IsPlaying = true;
         }
 
+
+
+        //Stop Music/Radio
         public void Stop()
         {
             if (IsPlaying)

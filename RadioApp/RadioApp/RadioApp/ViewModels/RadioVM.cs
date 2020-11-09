@@ -52,6 +52,7 @@ namespace RadioApp.ViewModels
 
             ShowAudioCommand = new Command(async () =>
             {
+                //Navigate to new page
                 await Application.Current.MainPage.Navigation.PushModalAsync(
                 new AudioPage(new AudioVM(RadioStation)), true);
                 IsBusy = false;
@@ -63,21 +64,26 @@ namespace RadioApp.ViewModels
                 IsRefreshing = false;
             });
 
+            //Subscribe to a MessagingCenter Channel
             MessagingCenter.Subscribe<object, RadioStation>(this, "UpdateFavorite", (sender, arg) => {
                 RadioStations.Find(x => x.Slug == arg.Slug).Favorite = arg.Favorite;
             });
         }
+        //Start up options
         private void StartOptions()
         {
             api = new API();
             db = new SqliteDatabase();
             RadioStations = new List<RadioStation>();
             IsBusy = false;
-
             GetAllRadioStationsFromAPI();
+
+            //Testing API
+            // api.GetRadioStationsTest();
 
         }
 
+        //Get all Radio stations from Extern API
         public async void GetAllRadioStationsFromAPI()
         {
 

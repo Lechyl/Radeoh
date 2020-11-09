@@ -7,6 +7,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:InverseBoolConverter x:Key="InverseBool" />
+            <converters:IntToBoolConverter x:Key="BoolToInt"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -24,13 +25,14 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width ="5*" />
+                                        <ColumnDefinition Width ="auto" />
 
                                     </Grid.ColumnDefinitions>
                                 
                                     <Image Grid.Column="0" x:Name="imageview" Source="{Binding Image}" Aspect="Fill" />
                                     <Label Grid.Column="1" Text="{Binding Title}"></Label>
+                                    <Image  Grid.Column="2" Source="star.png" HeightRequest="20" WidthRequest="20" IsVisible="{Binding Favorite}"></Image>
                                     
-
                                 </Grid>
 
 

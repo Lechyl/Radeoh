@@ -2,11 +2,13 @@
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace RadioApp.Models
 {
-    public class RadioStation
+    public class RadioStation : INotifyPropertyChanged
     {
 
         [JsonProperty("title")]
@@ -32,6 +34,19 @@ namespace RadioApp.Models
         [JsonProperty("stream_url")]
         public object StreamUrl { get; set; }
 
-        public bool Favorite = false;
+        [JsonProperty("favorite")]
+
+        private bool _favorite;
+        public bool Favorite { get => _favorite;  set { _favorite = value;  OnPropertyChanged(); } }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            //Invoke/Raise Event of the specific method name
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        }
     }
 }

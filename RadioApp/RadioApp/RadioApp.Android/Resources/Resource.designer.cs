@@ -14131,10 +14131,13 @@ namespace RadioApp.Droid
 			public const int notify_panel_notification_icon_bg = 2131165527;
 			
 			// aapt resource value: 0x7F070158
-			public const int tooltip_frame_dark = 2131165528;
+			public const int star = 2131165528;
 			
 			// aapt resource value: 0x7F070159
-			public const int tooltip_frame_light = 2131165529;
+			public const int tooltip_frame_dark = 2131165529;
+			
+			// aapt resource value: 0x7F07015A
+			public const int tooltip_frame_light = 2131165530;
 			
 			static Drawable()
 			{
@@ -15404,11 +15407,11 @@ namespace RadioApp.Droid
 		public partial class Mipmap
 		{
 			
-			// aapt resource value: 0x7F0C0000
-			public const int icon = 2131492864;
-			
 			// aapt resource value: 0x7F0C0001
-			public const int icon_round = 2131492865;
+			public const int icon = 2131492865;
+			
+			// aapt resource value: 0x7F0C0000
+			public const int ic_launcher = 2131492864;
 			
 			// aapt resource value: 0x7F0C0002
 			public const int launcher_foreground = 2131492866;
