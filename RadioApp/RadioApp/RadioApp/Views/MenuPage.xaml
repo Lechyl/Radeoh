@@ -21,9 +21,19 @@
                                         <ColumnDefinition Width ="5*" />
 
                                     </Grid.ColumnDefinitions>
+                                    <OnPlatform x:TypeArguments="Image">
+                                        
+                                    <OnPlatform.Android>
+                                        <Image Grid.Column="0" VerticalOptions="Center" x:Name="imageview1" Source="{Binding Image}" Aspect="Fill" />
 
-                                    <Image Grid.Column="0" x:Name="imageview" Source="{Binding Image}" Aspect="Fill" />
-                                    <Label Grid.Column="1" Text="{Binding Title}"></Label>
+                                    </OnPlatform.Android>
+                                    <OnPlatform.WinPhone>
+                                        <Image Grid.Column="0" VerticalOptions="Center" x:Name="imageview2" Source="{Binding Image}" Aspect="AspectFit" />
+
+                                    </OnPlatform.WinPhone>
+                                    </OnPlatform>
+
+                                    <Label Grid.Column="1" VerticalOptions="Center" Text="{Binding Title}"></Label>
 
 
                                 </Grid>

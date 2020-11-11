@@ -21,7 +21,7 @@ namespace RadioApp.ViewModels
         public SqliteDatabase db;
         public event PropertyChangedEventHandler PropertyChanged;
         public bool IsBusy { get; set; }
-         
+
         private bool _isLoading = false;
         public bool IsLoading 
         { 
@@ -33,6 +33,8 @@ namespace RadioApp.ViewModels
             }
             
         }
+        private int _starImageSize;
+        public int StarImageSize { get => _starImageSize; set { _starImageSize = value; OnPropertyChanged(); } }
 
         private bool _isRefreshing = false;
         public bool IsRefreshing { get => _isRefreshing; set { _isRefreshing = value; OnPropertyChanged(); } }
@@ -78,6 +80,25 @@ namespace RadioApp.ViewModels
             IsBusy = false;
             GetAllRadioStationsFromAPI();
 
+            //Platform specific code
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                StarImageSize = 10;
+
+
+            }
+            else if (Device.RuntimePlatform == Device.UWP)
+            {
+                StarImageSize = 10;
+
+
+
+            }
+            else if (Device.RuntimePlatform == Device.iOS)
+            {
+                 StarImageSize = 20;
+
+            }
             //Testing API
             // api.GetRadioStationsTest();
 

@@ -11,10 +11,10 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+            <RowDefinition Height=".1*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <BoxView BackgroundColor="Black" />
+        <BoxView BackgroundColor="DarkGray" />
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -41,37 +41,43 @@
                     <TapGestureRecognizer Command="{Binding BackCommand}"/>
                 </Label.GestureRecognizers>
             </Label>
+            <Label
+            Grid.Column="1"
+            Grid.Row="0"
+            HorizontalOptions="Center"
+                Text="Audio Player"
+                TextColor="White"
+                >
+                
+            </Label>
             
-            <Label
-            IsVisible="{Binding IsFavorite}"
-            VerticalOptions="CenterAndExpand"
-            HorizontalTextAlignment="End"
-            Grid.Column="2"
-            Grid.Row="0"
-            FontSize="20"
-                Margin="10,0"
-            TextColor="White"
-            Text="Remove Favorite"
-                >
-                <Label.GestureRecognizers>
+
+
+            <Image IsVisible="{Binding IsFavorite}"
+                   Source="star.png"
+                    Grid.Column="2"
+                    Grid.Row="0"
+                   HorizontalOptions="End"
+                   Aspect="AspectFit"
+                   >
+                <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding RemoveFavorite}"/>
-                </Label.GestureRecognizers>
-            </Label>
-            <Label
-             IsVisible="{Binding IsFavorite,Converter={StaticResource InverseBool}}"  
-            VerticalOptions="CenterAndExpand"
-            HorizontalTextAlignment="End"
-            Grid.Column="2"
-            Grid.Row="0"
-            FontSize="20"
-                Margin="10,0"
-            TextColor="White"
-            Text="Add Favorite"
-                >
-                <Label.GestureRecognizers>
+                </Image.GestureRecognizers>
+            </Image>
+            <Image IsVisible="{Binding IsFavorite,Converter={StaticResource InverseBool}}"
+                   Source="blankStar.png"
+                    Grid.Column="2"
+                    Grid.Row="0"
+                   Aspect="AspectFit"
+                   
+                   HorizontalOptions="End"
+                   
+                   >
+                <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding AddFavorite}"/>
-                </Label.GestureRecognizers>
-            </Label>
+                </Image.GestureRecognizers>
+            </Image>
+
             
 
 

@@ -25,16 +25,24 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width ="5*" />
-                                        <ColumnDefinition Width ="auto" />
+                                        <ColumnDefinition Width =".5*" />
 
                                     </Grid.ColumnDefinitions>
-                                
-                                    <Image Grid.Column="0" x:Name="imageview" Source="{Binding Image}" Aspect="Fill" />
-                                    <Label Grid.Column="1" Text="{Binding Title}"></Label>
-                                    <Image  Grid.Column="2" Source="star.png" HeightRequest="20" WidthRequest="20" IsVisible="{Binding Favorite}"></Image>
-                                    
-                                </Grid>
+                                    <OnPlatform x:TypeArguments="Image">
+                                        <OnPlatform.Android>
+                                            <Image Grid.Column="0" x:Name="imageview1" Source="{Binding Image}" Aspect="Fill"/>
 
+                                        </OnPlatform.Android>
+                                        <OnPlatform.WinPhone>
+                                            <Image Grid.Column="0" x:Name="imageview2" Source="{Binding Image}" Aspect="AspectFit"/>
+
+                                        </OnPlatform.WinPhone>
+                                    </OnPlatform>
+                                    <Label Grid.Column="1"  VerticalOptions="Center"  Text="{Binding Title}"></Label>
+                                    <Image  Grid.Column="2" x:Name="star1"  Aspect="AspectFit" HeightRequest="{Binding StarImageSize}" WidthRequest="{Binding StarImageSize}" Source="star.png" IsVisible="{Binding Favorite}"/>
+
+                                </Grid>
+ 
 
                             </StackLayout>
                         </ViewCell>

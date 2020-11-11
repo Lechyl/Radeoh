@@ -23,7 +23,7 @@ namespace RadioApp.Views
 
             menuVM = new MenuVM();
             BindingContext = menuVM;
-
+           
         }
 
         private void FavoriteView_ItemTapped(object sender, ItemTappedEventArgs e)

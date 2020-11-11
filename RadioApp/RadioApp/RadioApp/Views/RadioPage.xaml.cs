@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Xml.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -21,15 +21,15 @@ namespace RadioApp.Views
             InitializeComponent();
 
             radioVM = new RadioVM();
- 
+            
             BindingContext = radioVM;
 
-
-        }
+         }
 
         private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             await DisplayAlert(radioVM.RadioStation.Title, "hello", "Ok");
+            
         }
 
         private void RadioStationView_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -38,6 +38,7 @@ namespace RadioApp.Views
             {
                 radioVM.IsBusy = true;
                 radioVM.ShowAudioCommand.Execute(null);
+               
 
             }
 

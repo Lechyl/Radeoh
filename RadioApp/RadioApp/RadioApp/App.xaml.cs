@@ -17,7 +17,7 @@ namespace RadioApp
                 Master = new MenuPage(),
                 Detail = new NavigationPage(new RadioPage())
                 {
-                    BarBackgroundColor = Color.Black
+                    BarBackgroundColor = Color.DarkGray
                 }
             };
         }
