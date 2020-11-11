@@ -27,3 +27,5 @@ Jeg har lavet Local Images til at indikere favoriteliste, ser grimt ud på UWP
 
 10/11
 Design for Android and UWP
+11/11
+New Design
