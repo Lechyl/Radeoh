@@ -29,3 +29,5 @@ Jeg har lavet Local Images til at indikere favoriteliste, ser grimt ud på UWP
 Design for Android and UWP
 11/11
 New Design
+12/11
+Powerpoint og hjælpe andre

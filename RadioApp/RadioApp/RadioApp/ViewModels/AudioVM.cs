@@ -52,7 +52,7 @@ namespace RadioApp.ViewModels
                 IsFavorite = true;
                 RadioStation.Favorite = true;
                 ShowNotification("Radio Channel Added To Favorite");
-
+                
                 //Send Message to a MessagingCenter Channel
                 MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
             });
