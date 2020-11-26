@@ -15,7 +15,7 @@ namespace RadioApp.ViewModels
     public class AudioVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public SqliteDatabase db;
+        public MySqlDatabase db;
         private bool _isPlaying;
         public bool IsPlaying { get => _isPlaying; set { _isPlaying = value; OnPropertyChanged(); } }
 
@@ -79,7 +79,7 @@ namespace RadioApp.ViewModels
         //Start Up Options
         public void StartOptions(RadioStation station)
         {
-            db = new SqliteDatabase();
+            db = new MySqlDatabase();
             IsPlaying = false;
             RadioStation = station;
             IsFavorite = station.Favorite;

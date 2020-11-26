@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RadioApp.Views.LoginPage">
+    <ContentPage.Content>
+        <StackLayout  Padding="20">
+            <Grid>
+                <BoxView Color="Red" IsVisible="{Binding FailLogin}">
+                </BoxView>
+                <Label TextColor="White" Text="Din adgangskode og/eller brugernavn er forkert. Prøv igen ." FontAttributes="Bold" VerticalOptions="Center" Padding="5"></Label>
+            </Grid>
+
+            <Editor Placeholder="Brugernavn" Text="{Binding User.Email}"></Editor>
+            <Label></Label>
+            <Entry IsPassword="True" Placeholder="Adgangskode"  Text="{Binding User.Password}"></Entry>
+            <Label></Label>
+
+            <Button Text="Log ind" FontAttributes="Bold" BackgroundColor="ForestGreen" Command="{Binding loginCMD}"></Button>
+            <Label></Label>
+            <Button Text="Registrer" FontAttributes="Bold" BackgroundColor="OrangeRed" Command="{Binding goToRegisterCMD}"></Button>
+            <Label></Label>
+            <Button Text="Glemt adgangskode (not working atm.)" FontAttributes="Bold" BackgroundColor="CadetBlue"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

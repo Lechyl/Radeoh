@@ -18,7 +18,7 @@ namespace RadioApp.ViewModels
     {
 
         public API api;
-        public SqliteDatabase db;
+        public MySqlDatabase db;
         public event PropertyChangedEventHandler PropertyChanged;
         public bool IsBusy { get; set; }
 
@@ -75,7 +75,7 @@ namespace RadioApp.ViewModels
         private void StartOptions()
         {
             api = new API();
-            db = new SqliteDatabase();
+            db = new MySqlDatabase();
             RadioStations = new List<RadioStation>();
             IsBusy = false;
             GetAllRadioStationsFromAPI();

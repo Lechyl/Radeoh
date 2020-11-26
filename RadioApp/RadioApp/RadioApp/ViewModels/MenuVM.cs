@@ -31,7 +31,7 @@ namespace RadioApp.ViewModels
 
         public Command ShowFavoriteCommand { get; }
 
-        SqliteDatabase sqliteDatabase;
+        MySqlDatabase db;
         public MenuVM()
         {
             StartOptions();
@@ -63,8 +63,8 @@ namespace RadioApp.ViewModels
         //Start up options
         private async void StartOptions()
         {
-            sqliteDatabase = new SqliteDatabase();
-            Favorites = new ObservableCollection<Favorite>(await sqliteDatabase.GetFavorites());
+            db = new MySqlDatabase();
+            Favorites = new ObservableCollection<Favorite>(await db.GetFavorites());
            
 
 
