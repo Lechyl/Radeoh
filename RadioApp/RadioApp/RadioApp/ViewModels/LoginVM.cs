@@ -39,26 +39,26 @@ namespace RadioApp.ViewModels
            {
                await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new RegisterPage()));
            });
-            loginCMD = new Command( () =>
+            loginCMD = new Command(async () =>
             {
-                //LoginFunction();
+                LoginFunctionAsync();
                 //Application.Current.MainPage.DisplayAlert(User.Password, User.Username, "ok");
             });
         }
-        private  void LoginFunction()
+        private async void LoginFunctionAsync()
         {
-            //Application.Current.MainPage = new MainPage();
-            //var view = new RadioPage();
-             //Application.Current.MainPage = new MainPage();
             
-            /*bool success = await db.Login(User);
+            bool success = await db.Login(User);
             if (success)
             {
+                Application.Current.Properties["key"] = User.Username;
+                await Application.Current.MainPage.Navigation.PopModalAsync();
+
             }
             else
             {
                 FailLogin = true;
-            }*/
+            }
         }
         private void StartUpOptions()
         {

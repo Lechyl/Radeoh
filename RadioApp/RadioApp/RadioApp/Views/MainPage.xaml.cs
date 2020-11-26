@@ -19,6 +19,8 @@ namespace RadioApp.Views
 
             InitializeComponent();
 
+            Master = new MenuPage();
+            Detail = new RadioPage();
 
 
         }

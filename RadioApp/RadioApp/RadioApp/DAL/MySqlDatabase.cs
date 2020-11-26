@@ -28,7 +28,9 @@ namespace RadioApp.DAL
 
         public Task<List<Favorite>> GetFavorites()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            List<Favorite> list = new List<Favorite>();
+            return Task.FromResult(list);
 
         }
 

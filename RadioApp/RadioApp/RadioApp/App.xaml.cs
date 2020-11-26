@@ -12,15 +12,19 @@ namespace RadioApp
         {
             InitializeComponent();
 
-            /*            MainPage = new MasterDetailPage
-                        {
-                            Master = new MenuPage(),
-                            Detail = new NavigationPage(new LoginPage())
-                            {
-                                BarBackgroundColor = Color.DarkGray
-                            }
-                        };*/
-            MainPage = new LoginPage();
+            MainPage = new MasterDetailPage
+            {
+                Master = new MenuPage(),
+                Detail = new NavigationPage(new RadioPage())
+                {
+                    BarBackgroundColor = Color.DarkGray
+                }
+            };
+            if(!Properties.ContainsKey("key"))
+            {
+                MainPage.Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+
+            }
 
         }
         static SqliteDatabase database;
