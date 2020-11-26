@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using MySqlConnector;
+using Xamarin.Forms;
 
 namespace RadioApp.DAL
 {
     public class MySqlDatabase : IDatabase
     {
         private string constring = "Data Source=radiodb-instance-1.cn2dn4x7sadv.us-east-1.rds.amazonaws.com; Initial Catalog =Radio; User ID =admin; Password =Bu$F0rrud3";
-
+       
         public Task<bool> BulkSaveFavorites(Account account)
         {
             //Get favorite from sqlite
@@ -26,11 +27,46 @@ namespace RadioApp.DAL
             throw new NotImplementedException();
         }
 
-        public Task<List<Favorite>> GetFavorites()
+        public async Task<List<Favorite>> GetFavorites()
         {
-            //throw new NotImplementedException();
             List<Favorite> list = new List<Favorite>();
-            return Task.FromResult(list);
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(constring))
+                {
+                    conn.Open();
+
+                    string query = "SELECT slugFavorite FROM Radio.Account_has_favorites where idAccount = @id";
+                    using (MySqlCommand cmd = new MySqlCommand(query,conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", Application.Current.Properties["key"].ToString());
+
+                        MySqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                        if (reader.HasRows)
+                        {
+                            while(await reader.ReadAsync())
+                            {
+                                
+                                list.Add(new Favorite() { Slug = reader.GetString(0)});
+                           
+                            }
+                        }
+                        reader.Close();
+
+                    }
+                    await conn.CloseAsync();
+                }
+
+                return list;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
         }
 
@@ -50,7 +86,7 @@ namespace RadioApp.DAL
                     throw;
                 }
 
-                string query = "select COUNT(*) as accounts from Account where username = @username and password = @password ";
+                string query = "select COUNT(*) as accounts,id from Account where username = @username and password = @password ";
                 using (var cmd = new MySqlCommand(query, conn))
                 {
 
@@ -70,17 +106,24 @@ namespace RadioApp.DAL
                                 {
                                     reader.Close();
                                     await conn.CloseAsync();
+
+                                    Application.Current.Properties["name"] = account.Username;
+                                    Application.Current.Properties["key"] = reader.GetInt32(1);
+
                                     return true;
                                 }
 
                             }
                         }
+                        reader.Close();
+                        await conn.CloseAsync();
 
                         return false;
 
                     }
                     catch (Exception)
                     {
+                        await conn.CloseAsync();
                         return false;
                     }
                 }
@@ -89,7 +132,7 @@ namespace RadioApp.DAL
             }
         }
 
-        public Task<bool> Register(Account account)
+        public async Task<bool> Register(Account account)
         {
             try
             {
@@ -99,7 +142,39 @@ namespace RadioApp.DAL
                 using (MySqlConnection conn = new MySqlConnection(constring))
                 {
                     conn.Open();
-                    string query = "INSERT INTO Radio.Account (email,username,password,enabled) VALUES (@email,@username,@password,@enabled)";
+                    string query = "select COUNT(*) as accounts from Account where username = @username";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query,conn))
+                    {
+                        cmd.Parameters.AddWithValue("@username", account.Username);
+                        MySqlDataReader reader = await cmd.ExecuteReaderAsync();
+                        if (reader.HasRows)
+                        {
+                            while(await reader.ReadAsync())
+                            {
+                                if(reader.GetInt16(0) != 0)
+                                {
+                                    reader.Close();
+                                    await conn.CloseAsync();
+
+                                    return false;
+                                }
+ 
+                            }
+                        }
+                        else
+                        {
+                            reader.Close();
+                            await conn.CloseAsync();
+
+                            return false;
+
+                        }
+
+                        reader.Close();
+
+                    }
+                    query = "INSERT INTO Radio.Account (email,username,password,enabled) VALUES (@email,@username,@password,@enabled)";
                     //Create User
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -110,15 +185,15 @@ namespace RadioApp.DAL
                         cmd.ExecuteNonQuery();
                     }
 
-
+                   await conn.CloseAsync();
                 }
-                return Task.FromResult(true);
+                return true;
             }
 
             catch (Exception)
             {
 
-                return Task.FromResult(false);
+                return false;
 
             }
         }

@@ -47,11 +47,16 @@ namespace RadioApp.ViewModels
 
         public Command ShowAudioCommand { get; }
         public Command RefreshCommand { get; }
+        public Command logOutCMD { get; }
         public RadioVM()
         {
 
-           // StartOptions();
-
+            StartOptions();
+            logOutCMD = new Command(async () =>
+            {
+                Application.Current.Properties.Clear();
+                await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            });
             ShowAudioCommand = new Command(async () =>
             {
                 //Navigate to new page

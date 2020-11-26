@@ -41,7 +41,9 @@ namespace RadioApp.ViewModels
            });
             loginCMD = new Command(async () =>
             {
-                LoginFunctionAsync();
+                await Application.Current.MainPage.Navigation.PopModalAsync();
+
+                //LoginFunctionAsync();
                 //Application.Current.MainPage.DisplayAlert(User.Password, User.Username, "ok");
             });
         }
@@ -51,7 +53,6 @@ namespace RadioApp.ViewModels
             bool success = await db.Login(User);
             if (success)
             {
-                Application.Current.Properties["key"] = User.Username;
                 await Application.Current.MainPage.Navigation.PopModalAsync();
 
             }

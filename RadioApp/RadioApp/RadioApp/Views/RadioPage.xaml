@@ -10,11 +10,12 @@
             <converters:IntToBoolConverter x:Key="BoolToInt"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Log ud" Command="{Binding logOutCMD}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
 
         <StackLayout>
-
             <ListView IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}" IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}" x:Name="RadioStationView" ItemsSource="{Binding RadioStations}" SelectionMode="Single" SelectedItem="{Binding RadioStation}" ItemTapped="RadioStationView_ItemTapped"  >
                 <ListView.ItemTemplate>
                     <DataTemplate>
