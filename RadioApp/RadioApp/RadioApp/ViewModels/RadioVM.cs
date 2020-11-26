@@ -50,7 +50,7 @@ namespace RadioApp.ViewModels
         public RadioVM()
         {
 
-            StartOptions();
+           // StartOptions();
 
             ShowAudioCommand = new Command(async () =>
             {

@@ -29,12 +29,13 @@ namespace RadioApp.DAL
         public Task<List<Favorite>> GetFavorites()
         {
             throw new NotImplementedException();
+
         }
 
         public async Task<bool> Login(Account account)
         {
 
-            using(MySqlConnection conn = new MySqlConnection(constring))
+            using (MySqlConnection conn = new MySqlConnection(constring))
             {
                 try
                 {
@@ -47,45 +48,82 @@ namespace RadioApp.DAL
                     throw;
                 }
 
-                string query = "select COUNT(*) from Account where name = @username and password = @password ";
-                var cmd = new  MySqlCommand(query,conn);
-
-                cmd.Parameters.AddWithValue("@username", account.Username);
-                cmd.Parameters.AddWithValue("@password", account.Password);
-
-                try
+                string query = "select COUNT(*) as accounts from Account where username = @username and password = @password ";
+                using (var cmd = new MySqlCommand(query, conn))
                 {
-                    var result = await cmd.ExecuteScalarAsync();
-                    int count = int.Parse(result.ToString());
-                    if(count == 1)
+
+
+                    cmd.Parameters.AddWithValue("@username", account.Username);
+                    cmd.Parameters.AddWithValue("@password", account.Password);
+
+                    try
                     {
-                        return true;
+                        MySqlDataReader reader = await cmd.ExecuteReaderAsync();
+                        if ( reader.HasRows)
+                        {
+
+                            while (await reader.ReadAsync())
+                            {
+                               if (reader.GetInt32(0) == 1)
+                                {
+                                    reader.Close();
+                                    await conn.CloseAsync();
+                                    return true;
+                                }
+
+                            }
+                        }
+
+                        return false;
+
                     }
-                    else
+                    catch (Exception)
                     {
                         return false;
                     }
                 }
-                catch (Exception)
-                {
-                    return false;
-                }
-                
-                
+
+
             }
         }
 
         public Task<bool> Register(Account account)
         {
-            //Check if the Username exist in the database #Yes go on #No return and send back false boolean
+            try
+            {
 
-            //Create User
-            throw new NotImplementedException();
+
+                //Check if the Username exist in the database #Yes go on #No return and send back false boolean
+                using (MySqlConnection conn = new MySqlConnection(constring))
+                {
+                    conn.Open();
+                    string query = "INSERT INTO Radio.Account (email,username,password,enabled) VALUES (@email,@username,@password,@enabled)";
+                    //Create User
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@email", account.Email);
+                        cmd.Parameters.AddWithValue("@username", account.Username);
+                        cmd.Parameters.AddWithValue("@password", account.Password);
+                        cmd.Parameters.AddWithValue("@enabled", 1);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                }
+                return Task.FromResult(true);
+            }
+
+            catch (Exception)
+            {
+
+                return Task.FromResult(false);
+
+            }
         }
 
         public Task<bool> SaveFavorite(RadioStation station)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
         }
     }
 }

@@ -12,16 +12,16 @@ namespace RadioApp
         {
             InitializeComponent();
 
-            /*    MainPage = new MasterDetailPage
-                {
-                    Master = new MenuPage(),
-                    Detail = new NavigationPage(new RadioPage())
-                    {
-                        BarBackgroundColor = Color.DarkGray
-                    }
-                };*/
-
+            /*            MainPage = new MasterDetailPage
+                        {
+                            Master = new MenuPage(),
+                            Detail = new NavigationPage(new LoginPage())
+                            {
+                                BarBackgroundColor = Color.DarkGray
+                            }
+                        };*/
             MainPage = new LoginPage();
+
         }
         static SqliteDatabase database;
         public static SqliteDatabase Database

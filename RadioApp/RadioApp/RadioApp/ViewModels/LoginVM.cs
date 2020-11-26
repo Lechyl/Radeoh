@@ -39,35 +39,33 @@ namespace RadioApp.ViewModels
            {
                await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new RegisterPage()));
            });
-            loginCMD = new Command(async () =>
+            loginCMD = new Command( () =>
             {
-                bool success = await db.Login(User);
-                if (success)
-                {
-                    Application.Current.MainPage = new MasterDetailPage
-                    {
-                        Master = new MenuPage(),
-                        Detail = new NavigationPage(new RadioPage())
-                        {
-                            BarBackgroundColor = Color.DarkGray
-                        }
-                    };
-                }
-                else
-                {
-                    FailLogin = true;
-                }
+                //LoginFunction();
                 //Application.Current.MainPage.DisplayAlert(User.Password, User.Username, "ok");
             });
         }
-
+        private  void LoginFunction()
+        {
+            //Application.Current.MainPage = new MainPage();
+            //var view = new RadioPage();
+             //Application.Current.MainPage = new MainPage();
+            
+            /*bool success = await db.Login(User);
+            if (success)
+            {
+            }
+            else
+            {
+                FailLogin = true;
+            }*/
+        }
         private void StartUpOptions()
         {
             db = new MySqlDatabase();
 
             User = new Account();
             FailLogin = false;
-            FailLogin = true;
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")

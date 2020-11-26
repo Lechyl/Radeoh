@@ -10,7 +10,7 @@
                 <Label TextColor="White" Text="Din adgangskode og/eller brugernavn er forkert. Prøv igen ." FontAttributes="Bold" VerticalOptions="Center" Padding="5"></Label>
             </Grid>
 
-            <Editor Placeholder="Brugernavn" Text="{Binding User.Email}"></Editor>
+            <Editor Placeholder="Brugernavn" Text="{Binding User.Username}"></Editor>
             <Label></Label>
             <Entry IsPassword="True" Placeholder="Adgangskode"  Text="{Binding User.Password}"></Entry>
             <Label></Label>

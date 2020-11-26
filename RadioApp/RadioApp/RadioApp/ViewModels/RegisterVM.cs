@@ -50,6 +50,7 @@ namespace RadioApp.ViewModels
                         bool success = await db.Register(User);
                         if (success)
                         {
+                            ErrorDisplay = false;
                             saveData = await Application.Current.MainPage.DisplayAlert("Vigtig!", "Vil du gerne gemme nuværende favoritter og indstiller på kontoen?", "Ja", "Nej");
 
                             if (saveData)
@@ -57,6 +58,7 @@ namespace RadioApp.ViewModels
                                 await db.BulkSaveFavorites(User);
                             }
 
+                            //goBackCMD.Execute(null);
                         }
                         else
                         {
