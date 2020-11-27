@@ -15,7 +15,7 @@
 
             <Entry Text="{Binding User.Password}" IsPassword="True" Placeholder="Ny adgangskode"></Entry>
             <Entry Text="{Binding ConfirmPassword}" IsPassword="True" Placeholder="Gentag ny adgangskoden"></Entry>
-            
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -30,10 +30,8 @@
                 </Grid.RowDefinitions>
                 <Button Command="{Binding goBackCMD}" Text="Gå tilbage" FontSize="Body" FontAttributes="Bold" Grid.Column="0" Grid.Row="1" BackgroundColor="Red"></Button>
 
-                <Button Command="{Binding registerCMD}" Text="registrer" FontSize="Body" FontAttributes="Bold" Grid.Column="2" Grid.Row="1" BackgroundColor="Green"> </Button>
+                <Button Command="{Binding registerCMD}" Text="registrer" FontSize="Body" FontAttributes="Bold" Grid.Column="2" Grid.Row="1" BackgroundColor="Green"></Button>
             </Grid>
-
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
