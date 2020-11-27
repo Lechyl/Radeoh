@@ -16,6 +16,7 @@ namespace RadioApp.Views
         RegisterVM vm;
         public RegisterPage()
         {
+            Title = "Registrerings Form";
             InitializeComponent();
 
             vm = new RegisterVM();

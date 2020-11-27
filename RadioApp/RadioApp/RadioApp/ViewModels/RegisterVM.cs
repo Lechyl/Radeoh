@@ -57,8 +57,9 @@ namespace RadioApp.ViewModels
                             {
                                 await db.BulkSaveFavorites(User);
                             }
+                            await Application.Current.MainPage.DisplayAlert("Du er nu blevet registreret", "Tryk OK for at logge ind","OK");
 
-                            //goBackCMD.Execute(null);
+                            goBackCMD.Execute(null);
                         }
                         else
                         {

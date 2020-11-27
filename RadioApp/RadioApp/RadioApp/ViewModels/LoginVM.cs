@@ -39,11 +39,11 @@ namespace RadioApp.ViewModels
            {
                await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new RegisterPage()));
            });
-            loginCMD = new Command(async () =>
+            loginCMD = new Command( () =>
             {
-                await Application.Current.MainPage.Navigation.PopModalAsync();
+                //await Application.Current.MainPage.Navigation.PopModalAsync();
 
-                //LoginFunctionAsync();
+                LoginFunctionAsync();
                 //Application.Current.MainPage.DisplayAlert(User.Password, User.Username, "ok");
             });
         }

@@ -55,11 +55,12 @@ namespace RadioApp.ViewModels
             logOutCMD = new Command(async () =>
             {
                 Application.Current.Properties.Clear();
+                await Application.Current.SavePropertiesAsync();
                 await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             });
             ShowAudioCommand = new Command(async () =>
             {
-                //Navigate to new page
+                //Navigate to new pagess
                 await Application.Current.MainPage.Navigation.PushModalAsync(
                 new AudioPage(new AudioVM(RadioStation)), true);
                 IsBusy = false;

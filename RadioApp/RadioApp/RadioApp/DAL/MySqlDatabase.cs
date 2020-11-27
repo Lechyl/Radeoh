@@ -33,6 +33,9 @@ namespace RadioApp.DAL
 
             try
             {
+                if (Application.Current.Properties.ContainsKey("key"))
+                {
+
                 using (MySqlConnection conn = new MySqlConnection(constring))
                 {
                     conn.Open();
@@ -57,6 +60,7 @@ namespace RadioApp.DAL
 
                     }
                     await conn.CloseAsync();
+                }
                 }
 
                 return list;
@@ -104,12 +108,14 @@ namespace RadioApp.DAL
                             {
                                if (reader.GetInt32(0) == 1)
                                 {
-                                    reader.Close();
-                                    await conn.CloseAsync();
+      
 
                                     Application.Current.Properties["name"] = account.Username;
                                     Application.Current.Properties["key"] = reader.GetInt32(1);
+                                    await Application.Current.SavePropertiesAsync();
 
+                                    reader.Close();
+                                    await conn.CloseAsync();
                                     return true;
                                 }
 

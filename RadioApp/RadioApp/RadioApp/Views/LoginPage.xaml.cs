@@ -16,6 +16,7 @@ namespace RadioApp.Views
         LoginVM vm;
         public LoginPage()
         {
+            Title = "Login Form";
             InitializeComponent();
 
             vm = new LoginVM();
