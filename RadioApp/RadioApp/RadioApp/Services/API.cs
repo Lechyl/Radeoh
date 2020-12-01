@@ -1,14 +1,9 @@
 ﻿using Newtonsoft.Json;
-using RadioApp.DAL;
 using RadioApp.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace RadioApp.Services
 {
@@ -25,7 +20,7 @@ namespace RadioApp.Services
         public async Task<List<RadioStation>> GetRadioStations()
         {
 
-            string apiUrl = "https://radeoh.app/api/stations";
+            string apiUrl = "https://radeoh.app/api/stations/";
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
             HttpResponseMessage response = await client.GetAsync(uri);
             if (response.IsSuccessStatusCode)

@@ -16,7 +16,7 @@
             <Label></Label>
             <Entry IsPassword="True" Placeholder="Adgangskode"  Text="{Binding User.Password}"></Entry>
             <Label></Label>
-
+            <ActivityIndicator IsRunning="{Binding LoginLoading}"></ActivityIndicator>
             <Button Text="Log ind" FontAttributes="Bold" BackgroundColor="ForestGreen" Command="{Binding loginCMD}"></Button>
             <Label></Label>
             <Button Text="Registrer" FontAttributes="Bold" BackgroundColor="OrangeRed" Command="{Binding goToRegisterCMD}"></Button>
