@@ -23,9 +23,31 @@ namespace RadioApp.DAL
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteFavorite(RadioStation station)
+        public async Task<bool> DeleteFavorite(RadioStation station)
         {
-            throw new NotImplementedException();
+            using (MySqlConnection conn = new MySqlConnection(constring))
+            {
+                conn.Open();
+
+                string query = "DELETE FROM Radio.Account_has_favorites WHERE slugFavorite = @slug";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@slug", station.Slug);
+
+                    try
+                    {
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await conn.CloseAsync();
+                        return false;
+                    }
+                }
+
+                await conn.CloseAsync();
+                return true;
+            }
         }
 
         public async Task<List<Favorite>> GetFavorites()
@@ -44,10 +66,10 @@ namespace RadioApp.DAL
                         string query = "SELECT slugFavorite FROM Radio.Account_has_favorites where idAccount = @id";
                         using (MySqlCommand cmd = new MySqlCommand(query, conn))
                         {
-                            cmd.Parameters.AddWithValue("@id", Application.Current.Properties["key"].ToString());
+                            cmd.Parameters.AddWithValue("@id", Application.Current.Properties["key"]);
 
                             MySqlDataReader reader = await cmd.ExecuteReaderAsync();
-
+                                
                             if (reader.HasRows)
                             {
                                 while (await reader.ReadAsync())
@@ -92,10 +114,9 @@ namespace RadioApp.DAL
                 }
                 int id = 0;
                 string hashedPassword = "";
-                string salt = "";
                 int attempt = 0;
                 int enabled = 0;
-                string query = "select password,salt,id,attempt,enabled from Account where username = @username";
+                string query = "select password,id,attempt,enabled from Account where username = @username";
                 using (var cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@username", account.Username);
@@ -106,10 +127,9 @@ namespace RadioApp.DAL
                         while (await reader.ReadAsync())
                         {
                             hashedPassword = reader.GetString(0);
-                            salt = reader.GetString(1);
-                            id = reader.GetInt32(2);
-                            attempt = reader.GetInt32(3);
-                            enabled = reader.GetInt16(4);
+                            id = reader.GetInt32(1);
+                            attempt = reader.GetInt32(2);
+                            enabled = reader.GetInt16(3);
                         }
                     }
                     reader.Close();
@@ -123,7 +143,7 @@ namespace RadioApp.DAL
                     if (attempt < 3 && enabled == 1)
                     {
 
-                        if (Hash.VerifyHash(account.Password, hashedPassword, salt))
+                        if (Hash.VerifyHash(account.Password, hashedPassword))
                         {
                             //Logged in
                             //reset attempt to zero
@@ -233,17 +253,17 @@ namespace RadioApp.DAL
                         reader.Close();
 
                     }
-                    query = "INSERT INTO Radio.Account (email,username,password,enabled,salt) VALUES (@email,@username,@password,@enabled,@salt)";
+                    query = "INSERT INTO Radio.Account (email,username,password,enabled) VALUES (@email,@username,@password,@enabled)";
                     //Create User
-                    string salt = Hash.CreateSalt(8);
-                    account.Password = Hash.CreateHash(account.Password, salt);
+
+                    account.Password = Hash.CreateHash(account.Password);
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@email", account.Email);
                         cmd.Parameters.AddWithValue("@username", account.Username);
                         cmd.Parameters.AddWithValue("@password", account.Password);
                         cmd.Parameters.AddWithValue("@enabled", 1);
-                        cmd.Parameters.AddWithValue("@salt", salt);
+
 
                         cmd.ExecuteNonQuery();
                     }
@@ -261,9 +281,64 @@ namespace RadioApp.DAL
             }
         }
 
-        public Task<bool> SaveFavorite(RadioStation station)
+        public async Task<bool> SaveFavorite(RadioStation station)
         {
-            return Task.FromResult(true);
+            using (MySqlConnection conn = new MySqlConnection(constring))
+            {
+                conn.Open();
+
+                bool favoriteExist = false;
+                string query = "select * from Radio.Favorite where slug = @slug";
+
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@slug", station.Slug);
+
+                    MySqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                    favoriteExist = reader.HasRows;
+                    reader.Close();
+                }
+
+                if (!favoriteExist)
+                {
+
+                    string query1 = "INSERT INTO Radio.Favorite(slug,Title,country,lang,image,stream_url)VALUES(@slug,@title,@country,@lang,@image,@stream_url)";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query1, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@slug", station.Slug);
+                        cmd.Parameters.AddWithValue("@Title", station.Title);
+                        cmd.Parameters.AddWithValue("@country", station.Country);
+                        cmd.Parameters.AddWithValue("@lang", station.Lang);
+                        cmd.Parameters.AddWithValue("@image", station.Image);
+                        cmd.Parameters.AddWithValue("@stream_url", station.StreamUrl);
+                        try
+                        {
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+                        catch (Exception)
+                        {
+                            await conn.CloseAsync();
+                            return false;
+                        }
+                    }
+                }
+
+                string query2 = "INSERT INTO Radio.Account_has_favorites(idAccount,slugFavorite)VALUES(@id,@slug)";
+                using(MySqlCommand cmd = new MySqlCommand(query2, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", Application.Current.Properties["key"]);
+                    cmd.Parameters.AddWithValue("@slug", station.Slug);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                await conn.CloseAsync();
+
+                return true;
+
+            }
+
         }
     }
 }

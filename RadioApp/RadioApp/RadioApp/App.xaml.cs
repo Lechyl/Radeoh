@@ -12,18 +12,18 @@ namespace RadioApp
         {
             InitializeComponent();
 
-            MainPage = new MasterDetailPage
+            //MainPage.Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            MainPage = new LoginPage();
+            if (Properties.ContainsKey("key"))
             {
-                Master = new MenuPage(),
-                Detail = new NavigationPage(new RadioPage())
+                MainPage = new MasterDetailPage
                 {
-                    BarBackgroundColor = Color.DarkGray
-                }
-            };
-            if(!Properties.ContainsKey("key"))
-            {
-                MainPage.Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
-
+                    Master = new MenuPage(),
+                    Detail = new NavigationPage(new RadioPage())
+                    {
+                        BarBackgroundColor = Color.DarkGray
+                    }
+                };
             }
 
         }

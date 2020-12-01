@@ -59,8 +59,15 @@ namespace RadioApp.ViewModels
 
             if (success)
             {
-                await Application.Current.MainPage.Navigation.PopModalAsync();
-
+               // await Application.Current.MainPage.Navigation.PopModalAsync();
+                Application.Current.MainPage = new MasterDetailPage
+                {
+                    Master = new MenuPage(),
+                    Detail = new NavigationPage(new RadioPage())
+                    {
+                        BarBackgroundColor = Color.DarkGray
+                    }
+                };
             }
             else
             {

@@ -54,6 +54,8 @@ namespace RadioApp.ViewModels
             StartOptions();
             logOutCMD = new Command(async () =>
             {
+                Application.Current.Properties["name"] = null;
+                Application.Current.Properties["key"] = null;
                 Application.Current.Properties.Clear();
                 await Application.Current.SavePropertiesAsync();
                 await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
@@ -133,6 +135,8 @@ namespace RadioApp.ViewModels
                         }
                     }
                 }
+                //send stations list to Menu
+                MessagingCenter.Send<object, List<RadioStation>>(this, "GetAllStations", RadioStations);
             }
             catch (Exception)
             {

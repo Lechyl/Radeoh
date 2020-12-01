@@ -58,13 +58,26 @@ namespace RadioApp.ViewModels
                 }
 
             });
+            MessagingCenter.Subscribe<object, List<RadioStation>>(this, "GetAllStations", (sender, arg) =>
+            {
+
+                foreach (var item in arg)
+                {
+                    if (item.Favorite)
+                    {
+                        Favorites.Add(Mapper.Map(item));
+
+                    }
+                }
+
+            });
         }
 
         //Start up options
-        private async void StartOptions()
+        private void StartOptions()
         {
             db = new MySqlDatabase();
-            Favorites = new ObservableCollection<Favorite>(await db.GetFavorites());
+            Favorites = new ObservableCollection<Favorite>();
            
 
 

@@ -23,6 +23,8 @@ namespace RadioApp.ViewModels
         public string ErrorText { get => _errorText; set { _errorText = value; OnPropertyChanged(); } }
         private bool _errorDisplay;
         public bool ErrorDisplay { get => _errorDisplay; set { _errorDisplay = value; OnPropertyChanged(); } }
+        private bool _registerLoading;
+        public bool RegisterLoading { get => _registerLoading; set { _registerLoading = value; OnPropertyChanged(); } }
         private bool saveData { get; set; }
         public MySqlDatabase db;
 
@@ -34,7 +36,7 @@ namespace RadioApp.ViewModels
 
             registerCMD = new Command(async () =>
             {
-
+                RegisterLoading = true;
                 if (!string.IsNullOrWhiteSpace(User.Email) && !string.IsNullOrWhiteSpace(User.Username) && !string.IsNullOrWhiteSpace(User.Password) && !string.IsNullOrWhiteSpace(ConfirmPassword))
                 {
 
@@ -48,6 +50,8 @@ namespace RadioApp.ViewModels
                     {
 
                         bool success = await db.Register(User);
+                        RegisterLoading = false;
+
                         if (success)
                         {
                             ErrorDisplay = false;
@@ -74,7 +78,7 @@ namespace RadioApp.ViewModels
                     ErrorDisplay = true;
                     ErrorText = "Nogle af felterne er tomme";
                 }
-
+                RegisterLoading = false;
 
 
             });
@@ -90,6 +94,7 @@ namespace RadioApp.ViewModels
             db = new MySqlDatabase();
             User = new Account();
             saveData = false;
+            RegisterLoading = false;
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
