@@ -14,13 +14,84 @@ namespace RadioApp.DAL
     {
         private string constring = "Data Source=radiodb-instance-1.cn2dn4x7sadv.us-east-1.rds.amazonaws.com; Initial Catalog =Radio; User ID =admin; Password =Bu$F0rrud3";
 
-        public Task<bool> BulkSaveFavorites(Account account)
+        public async Task<bool> BulkSaveFavorites(Account account)
         {
             //Get favorite from sqlite
+            SqliteDatabase sqliteDatabase = new SqliteDatabase();
+            var sqlFavorites = await sqliteDatabase.GetFavorites();
+            using (MySqlConnection conn = new MySqlConnection(constring))
+            {
+                conn.Open();
 
-            //Compare favorites with Database favorites to see if it exist there, else insert into database
-            //use favorite slug from the sqlite favorites and add them to account_has_favorite table with the account id
-            throw new NotImplementedException();
+                bool favoriteExist = false;
+                string query = "select * from Radio.Favorite where slug = @slug";
+
+                foreach (var item in sqlFavorites)
+                {
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@slug", item.Slug);
+
+                        MySqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                        favoriteExist = reader.HasRows;
+                        reader.Close();
+                    }
+
+                    if (!favoriteExist)
+                    {
+
+                        string query1 = "INSERT INTO Radio.Favorite(slug,Title,country,lang,image,stream_url)VALUES(@slug,@title,@country,@lang,@image,@stream_url)";
+
+                        using (MySqlCommand cmd = new MySqlCommand(query1, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@slug", item.Slug);
+                            cmd.Parameters.AddWithValue("@Title", item.Title);
+                            cmd.Parameters.AddWithValue("@country", item.Country);
+                            cmd.Parameters.AddWithValue("@lang", item.Lang);
+                            cmd.Parameters.AddWithValue("@image", item.Image);
+                            cmd.Parameters.AddWithValue("@stream_url", item.StreamUrl);
+
+                            try
+                            {
+                                await cmd.ExecuteNonQueryAsync();
+                            }
+                            catch (Exception)
+                            {
+                                await conn.CloseAsync();
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                var query2 = new StringBuilder("INSERT INTO Radio.Account_has_favorites(idAccount,slugFavorite)VALUES");
+                string id = Application.Current.Properties["tmpID"].ToString();
+                List<string> rows = new List<string>();
+                foreach (var item in sqlFavorites)
+                {
+                    rows.Add(string.Format("({0},'{1}')", int.Parse(id), MySqlHelper.EscapeString(item.Slug)));
+                }
+                query2.Append(string.Join(",", rows));
+
+                using (MySqlCommand cmd = new MySqlCommand(query2.ToString(), conn))
+                {
+                    try
+                    {
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception)
+                    {
+                        await conn.CloseAsync();
+                        return false;
+                    }
+                }
+                await conn.CloseAsync();
+
+                return true;
+
+            }
         }
 
         public async Task<bool> DeleteFavorite(RadioStation station)
@@ -69,7 +140,7 @@ namespace RadioApp.DAL
                             cmd.Parameters.AddWithValue("@id", Application.Current.Properties["key"]);
 
                             MySqlDataReader reader = await cmd.ExecuteReaderAsync();
-                                
+
                             if (reader.HasRows)
                             {
                                 while (await reader.ReadAsync())
@@ -229,17 +300,17 @@ namespace RadioApp.DAL
                         MySqlDataReader reader = await cmd.ExecuteReaderAsync();
                         if (reader.HasRows)
                         {
-                            while (await reader.ReadAsync())
+                            await reader.ReadAsync();
+
+                            if (reader.GetInt16(0) != 0)
                             {
-                                if (reader.GetInt16(0) != 0)
-                                {
-                                    reader.Close();
-                                    await conn.CloseAsync();
+                                reader.Close();
+                                await conn.CloseAsync();
 
-                                    return false;
-                                }
-
+                                return false;
                             }
+
+
                         }
                         else
                         {
@@ -266,6 +337,8 @@ namespace RadioApp.DAL
 
 
                         cmd.ExecuteNonQuery();
+                        Application.Current.Properties["tmpID"] = cmd.LastInsertedId;
+                        await Application.Current.SavePropertiesAsync();
                     }
 
                     await conn.CloseAsync();
@@ -326,7 +399,7 @@ namespace RadioApp.DAL
                 }
 
                 string query2 = "INSERT INTO Radio.Account_has_favorites(idAccount,slugFavorite)VALUES(@id,@slug)";
-                using(MySqlCommand cmd = new MySqlCommand(query2, conn))
+                using (MySqlCommand cmd = new MySqlCommand(query2, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", Application.Current.Properties["key"]);
                     cmd.Parameters.AddWithValue("@slug", station.Slug);

@@ -13,7 +13,7 @@ namespace RadioApp
             InitializeComponent();
 
             //MainPage.Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
-            MainPage = new LoginPage();
+            MainPage = new NavigationPage(new LoginPage());
             if (Properties.ContainsKey("key"))
             {
                 MainPage = new MasterDetailPage

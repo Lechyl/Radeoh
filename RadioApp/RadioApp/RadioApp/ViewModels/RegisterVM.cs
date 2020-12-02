@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Xamarin.Forms;
+using RadioApp.Helper;
 
 namespace RadioApp.ViewModels
 {
@@ -40,6 +41,15 @@ namespace RadioApp.ViewModels
                 if (!string.IsNullOrWhiteSpace(User.Email) && !string.IsNullOrWhiteSpace(User.Username) && !string.IsNullOrWhiteSpace(User.Password) && !string.IsNullOrWhiteSpace(ConfirmPassword))
                 {
 
+                    if (!RegexUtility.IsValidEmail(User.Email))
+                    {
+                        ErrorDisplay = true;
+                        ErrorText = "Email addressen er ugyldig";
+
+                    }
+                    else
+                    {
+
                     if (User.Password != ConfirmPassword)
                     {
                         ErrorDisplay = true;
@@ -61,6 +71,8 @@ namespace RadioApp.ViewModels
                             {
                                 await db.BulkSaveFavorites(User);
                             }
+                            Application.Current.Properties["tmpID"] = null;
+                            await Application.Current.SavePropertiesAsync();
                             await Application.Current.MainPage.DisplayAlert("Du er nu blevet registreret", "Tryk OK for at logge ind","OK");
 
                             goBackCMD.Execute(null);
@@ -72,6 +84,8 @@ namespace RadioApp.ViewModels
                         }
 
                     }
+                    }
+
                 }
                 else
                 {
