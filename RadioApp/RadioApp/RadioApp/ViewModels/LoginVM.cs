@@ -1,5 +1,6 @@
 ﻿using RadioApp.DAL;
 using RadioApp.Models;
+using RadioApp.Services;
 using RadioApp.Views;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace RadioApp.ViewModels
         private bool _loginLoading;
         public bool LoginLoading { get => _loginLoading; set { _loginLoading = value; OnPropertyChanged(); } }
 
-        private MySqlDatabase db;
+        private API api;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -54,11 +55,18 @@ namespace RadioApp.ViewModels
         private async void LoginFunctionAsync()
         {
 
-            bool success = await db.Login(User);
-            LoginLoading = false;
-
-            if (success)
+            if(string.IsNullOrWhiteSpace(User.Username) || string.IsNullOrWhiteSpace(User.Password))
             {
+                FailLogin = true;
+                LoginLoading = false;
+                return;
+            }
+
+            var account = await api.Login(User);
+            LoginLoading = false;
+            if (account != null)
+            {
+                Application.Current.Properties["key"] = account.Id;
                // await Application.Current.MainPage.Navigation.PopModalAsync();
                 Application.Current.MainPage = new MasterDetailPage
                 {
@@ -76,7 +84,7 @@ namespace RadioApp.ViewModels
         }
         private void StartUpOptions()
         {
-            db = new MySqlDatabase();
+            api = new API();
 
             User = new Account();
             FailLogin = false;

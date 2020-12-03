@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
-namespace RadioApp.Helper
+
+namespace WebAPI.Helper
 {
     public class Hash
     {

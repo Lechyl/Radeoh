@@ -15,7 +15,7 @@ namespace RadioApp.ViewModels
     public class AudioVM : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public MySqlDatabase db;
+        public API api;
         private bool _isPlaying;
         public bool IsPlaying { get => _isPlaying; set { _isPlaying = value; OnPropertyChanged(); } }
 
@@ -48,18 +48,28 @@ namespace RadioApp.ViewModels
             });
 
             AddFavorite = new Command(async () => {
-                await db.SaveFavorite(RadioStation);
-                IsFavorite = true;
-                RadioStation.Favorite = true;
-                ShowNotification("Radio Channel Added To Favorite");
-                
-                //Send Message to a MessagingCenter Channel
-                MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
+                var success  = await api.SaveFavorite(RadioStation);
+                if (success)
+                {
+                    IsFavorite = true;
+                    RadioStation.Favorite = true;
+                    ShowNotification("Radio Channel Added To Favorite");
+
+                    //Send Message to a MessagingCenter Channel
+                    MessagingCenter.Send<object, RadioStation>(this, "UpdateFavorite", RadioStation);
+                }
+                else
+                {
+                    ShowNotification("Error 500 The servers are down. Please try again later or call support");
+
+                }
+
+
             });
 
             RemoveFavorite = new Command(async () =>
             {
-                await db.DeleteFavorite(RadioStation);
+                await api.DeleteFavorite(RadioStation);
                 IsFavorite = false;
                 RadioStation.Favorite = false;
                 ShowNotification("Radio Channel Removed From Favorite");
@@ -79,7 +89,7 @@ namespace RadioApp.ViewModels
         //Start Up Options
         public void StartOptions(RadioStation station)
         {
-            db = new MySqlDatabase();
+            api = new API();
             IsPlaying = false;
             RadioStation = station;
             IsFavorite = station.Favorite;

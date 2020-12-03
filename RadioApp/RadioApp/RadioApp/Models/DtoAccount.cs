@@ -1,19 +1,15 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RadioApp.Models
 {
-    public class Account
+    public class DtoAccount
     {
-        [JsonProperty("Email")]
+        public int Id { get; set; }
         public string Email { get; set; }
-        [JsonProperty("Username")]
-
         public string Username { get; set; }
-        [JsonProperty("Password")]
-
         public string Password { get; set; }
     }
 }

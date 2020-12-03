@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Xamarin.Forms;
 using RadioApp.Helper;
+using RadioApp.Services;
 
 namespace RadioApp.ViewModels
 {
@@ -27,7 +28,7 @@ namespace RadioApp.ViewModels
         private bool _registerLoading;
         public bool RegisterLoading { get => _registerLoading; set { _registerLoading = value; OnPropertyChanged(); } }
         private bool saveData { get; set; }
-        public MySqlDatabase db;
+        public API api;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -50,40 +51,40 @@ namespace RadioApp.ViewModels
                     else
                     {
 
-                    if (User.Password != ConfirmPassword)
-                    {
-                        ErrorDisplay = true;
-                        ErrorText = "Den nye adgangskode passer ikke med gentag ny adgangskoden";
-
-                    }
-                    else
-                    {
-
-                        bool success = await db.Register(User);
-                        RegisterLoading = false;
-
-                        if (success)
+                        if (User.Password != ConfirmPassword)
                         {
-                            ErrorDisplay = false;
-                            saveData = await Application.Current.MainPage.DisplayAlert("Vigtig!", "Vil du gerne gemme nuværende favoritter og indstiller på kontoen?", "Ja", "Nej");
+                            ErrorDisplay = true;
+                            ErrorText = "Den nye adgangskode passer ikke med gentag ny adgangskoden";
 
-                            if (saveData)
-                            {
-                                await db.BulkSaveFavorites(User);
-                            }
-                            Application.Current.Properties["tmpID"] = null;
-                            await Application.Current.SavePropertiesAsync();
-                            await Application.Current.MainPage.DisplayAlert("Du er nu blevet registreret", "Tryk OK for at logge ind","OK");
-
-                            goBackCMD.Execute(null);
                         }
                         else
                         {
-                            ErrorDisplay = true;
-                            ErrorText = "Brugernavnet findes allerede. Vælg et andet brugernavn";
-                        }
 
-                    }
+                            var account = await api.Register(User);
+                            RegisterLoading = false;
+
+                            if (account != null)
+                            {
+                                ErrorDisplay = false;
+                                saveData = await Application.Current.MainPage.DisplayAlert("Vigtig!", "Vil du gerne gemme nuværende favoritter og indstiller på kontoen?", "Ja", "Nej");
+
+                                if (saveData)
+                                {
+                                    await api.BulkSaveFavorites(User);
+                                }
+                                Application.Current.Properties["tmpID"] = null;
+                                await Application.Current.SavePropertiesAsync();
+                                await Application.Current.MainPage.DisplayAlert("Du er nu blevet registreret", "Tryk OK for at logge ind", "OK");
+
+                                goBackCMD.Execute(null);
+                            }
+                            else
+                            {
+                                ErrorDisplay = true;
+                                ErrorText = "Brugernavnet findes allerede. Vælg et andet brugernavn";
+                            }
+
+                        }
                     }
 
                 }
@@ -105,7 +106,7 @@ namespace RadioApp.ViewModels
 
         private void StartUpOptions()
         {
-            db = new MySqlDatabase();
+            api = new API();
             User = new Account();
             saveData = false;
             RegisterLoading = false;

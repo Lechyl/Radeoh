@@ -18,7 +18,6 @@ namespace RadioApp.ViewModels
     {
 
         public API api;
-        public MySqlDatabase db;
         public event PropertyChangedEventHandler PropertyChanged;
         public bool IsBusy { get; set; }
 
@@ -83,7 +82,6 @@ namespace RadioApp.ViewModels
         private void StartOptions()
         {
             api = new API();
-            db = new MySqlDatabase();
             RadioStations = new List<RadioStation>();
             IsBusy = false;
             GetAllRadioStationsFromAPI();
@@ -120,7 +118,7 @@ namespace RadioApp.ViewModels
             try
             {
                 RadioStations = await api.GetRadioStations();
-                List<Favorite> FavoriteSlugs = await db.GetFavorites();
+                List<Favorite> FavoriteSlugs = await api.GetFavorites();
                 if(FavoriteSlugs.Count > 0)
                 {
                     for (int i = 0; i < FavoriteSlugs.Count; i++)

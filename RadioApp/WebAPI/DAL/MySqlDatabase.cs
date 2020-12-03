@@ -1,24 +1,21 @@
-﻿using RadioApp.Models;
-using RadioApp.Services;
+﻿using WebAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using MySqlConnector;
-using Xamarin.Forms;
-using RadioApp.Helper;
+using WebAPI.Helper;
 
-namespace RadioApp.DAL
+namespace WebAPI.DAL
 {
-    public class MySqlDatabase 
+    public class MySqlDatabase : IDatabase
     {
         private string constring = "Data Source=radiodb-instance-1.cn2dn4x7sadv.us-east-1.rds.amazonaws.com; Initial Catalog =Radio; User ID =admin; Password =Bu$F0rrud3";
-
-        /*public async Task<bool> BulkSaveFavorites(Account account)
+        /*
+        public async Task<bool> BulkSaveFavorites(Account account)
         {
             //Get favorite from sqlite
-            SqliteDatabase sqliteDatabase = new SqliteDatabase();
-            var sqlFavorites = await sqliteDatabase.GetFavorites();
+
             using (MySqlConnection conn = new MySqlConnection(constring))
             {
                 conn.Open();
@@ -93,17 +90,19 @@ namespace RadioApp.DAL
 
             }
         }
-
-        public async Task<bool> DeleteFavorite(RadioStation station)
+        */
+        public async Task<bool> DeleteFavorite(int id,Favorite station)
         {
             using (MySqlConnection conn = new MySqlConnection(constring))
             {
                 conn.Open();
 
-                string query = "DELETE FROM Radio.Account_has_favorites WHERE slugFavorite = @slug";
+                string query = "DELETE FROM Radio.Account_has_favorites WHERE slugFavorite = @slug AND idAccount = @id";
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@slug", station.Slug);
+                    cmd.Parameters.AddWithValue("@id", id);
+
 
                     try
                     {
@@ -121,14 +120,12 @@ namespace RadioApp.DAL
             }
         }
 
-        public async Task<List<Favorite>> GetFavorites()
+        public async Task<List<Favorite>> GetFavorites(int id)
         {
             List<Favorite> list = new List<Favorite>();
 
             try
             {
-                if (Application.Current.Properties.ContainsKey("key"))
-                {
 
                     using (MySqlConnection conn = new MySqlConnection(constring))
                     {
@@ -137,7 +134,7 @@ namespace RadioApp.DAL
                         string query = "SELECT slugFavorite FROM Radio.Account_has_favorites where idAccount = @id";
                         using (MySqlCommand cmd = new MySqlCommand(query, conn))
                         {
-                            cmd.Parameters.AddWithValue("@id", Application.Current.Properties["key"]);
+                            cmd.Parameters.AddWithValue("@id", id);
 
                             MySqlDataReader reader = await cmd.ExecuteReaderAsync();
 
@@ -155,7 +152,7 @@ namespace RadioApp.DAL
                         }
                         await conn.CloseAsync();
                     }
-                }
+                
 
                 return list;
 
@@ -168,7 +165,7 @@ namespace RadioApp.DAL
 
         }
 
-        public async Task<bool> Login(Account account)
+        public async Task<DtoAccount> Login(DtoAccount account)
         {
 
             using (MySqlConnection conn = new MySqlConnection(constring))
@@ -218,9 +215,6 @@ namespace RadioApp.DAL
                         {
                             //Logged in
                             //reset attempt to zero
-                            Application.Current.Properties["name"] = account.Username;
-                            Application.Current.Properties["key"] = id;
-                            await Application.Current.SavePropertiesAsync();
                             string query1 = "Update Radio.Account SET attempt = @attempt WHERE username = @username and id = @id";
                             using (MySqlCommand cmd1 = new MySqlCommand(query1, conn))
                             {
@@ -230,8 +224,8 @@ namespace RadioApp.DAL
                                 await cmd1.ExecuteNonQueryAsync();
 
                             }
+                            account.Id = id;
                             await conn.CloseAsync();
-                            return true;
                         }
                         else
                         {
@@ -245,6 +239,7 @@ namespace RadioApp.DAL
                                 await cmd1.ExecuteNonQueryAsync();
 
                             }
+                            return null;
 
                         }
                     }
@@ -261,6 +256,7 @@ namespace RadioApp.DAL
 
 
                         }
+                        return null;
 
                     }
 
@@ -268,28 +264,35 @@ namespace RadioApp.DAL
 
                     await conn.CloseAsync();
 
-                    return false;
+                    return account;
 
                 }
                 catch (Exception e)
                 {
                     string d = e.Message;
                     await conn.CloseAsync();
-                    return false;
+                    return null;
                 }
 
 
             }
         }
 
-        public async Task<bool> Register(Account account)
+        public async Task<DtoAccount> Register(Account account)
         {
-            try
-            {
 
 
+                DtoAccount dtoAccount = new DtoAccount()
+                {
+                    Id = 0,
+                    Email = account.Email,
+                    Username = account.Username,
+                    Password = account.Password
+                };
                 //Check if the Username exist in the database #Yes go on #No return and send back false boolean
                 using (MySqlConnection conn = new MySqlConnection(constring))
+                {
+                try
                 {
                     conn.Open();
                     string query = "select COUNT(*) as accounts from Account where username = @username";
@@ -307,7 +310,7 @@ namespace RadioApp.DAL
                                 reader.Close();
                                 await conn.CloseAsync();
 
-                                return false;
+                                return null;
                             }
 
 
@@ -317,7 +320,7 @@ namespace RadioApp.DAL
                             reader.Close();
                             await conn.CloseAsync();
 
-                            return false;
+                            return null;
 
                         }
 
@@ -337,24 +340,27 @@ namespace RadioApp.DAL
 
 
                         cmd.ExecuteNonQuery();
-                        Application.Current.Properties["tmpID"] = cmd.LastInsertedId;
-                        await Application.Current.SavePropertiesAsync();
+                        dtoAccount.Id = (int)cmd.LastInsertedId;
                     }
+                    
 
                     await conn.CloseAsync();
+                    return dtoAccount;
+
                 }
-                return true;
+                catch (Exception)
+                {
+                    await conn.CloseAsync();
+
+                    return null;
+
+                }
             }
 
-            catch (Exception)
-            {
 
-                return false;
-
-            }
         }
 
-        public async Task<bool> SaveFavorite(RadioStation station)
+        public async Task<bool> SaveFavorite(int id,Favorite station)
         {
             using (MySqlConnection conn = new MySqlConnection(constring))
             {
@@ -401,7 +407,7 @@ namespace RadioApp.DAL
                 string query2 = "INSERT INTO Radio.Account_has_favorites(idAccount,slugFavorite)VALUES(@id,@slug)";
                 using (MySqlCommand cmd = new MySqlCommand(query2, conn))
                 {
-                    cmd.Parameters.AddWithValue("@id", Application.Current.Properties["key"]);
+                    cmd.Parameters.AddWithValue("@id", id);
                     cmd.Parameters.AddWithValue("@slug", station.Slug);
 
                     await cmd.ExecuteNonQueryAsync();
@@ -412,6 +418,6 @@ namespace RadioApp.DAL
 
             }
 
-        }*/
+        }
     }
 }

@@ -145,9 +145,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next">
-      <Version>4.0.2</Version>
-    </PackageReference>
     <PackageReference Include="Plugin.MediaManager.Forms">
       <Version>0.9.4</Version>
     </PackageReference>
