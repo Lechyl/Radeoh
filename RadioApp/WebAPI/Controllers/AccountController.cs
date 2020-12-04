@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DAL;
 using WebAPI.Models;
@@ -13,8 +14,10 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+
         MySqlDatabase db = new MySqlDatabase();
         // GET: api/<AccountController>
+        [AllowAnonymous]
         [HttpGet()]
         public ActionResult Get()
         {
@@ -42,7 +45,9 @@ namespace WebAPI.Controllers
             {
                 return BadRequest();
             }
-            return dbAccount;
+            
+
+            return Ok(dtoAccount);
         }
 
         //Register

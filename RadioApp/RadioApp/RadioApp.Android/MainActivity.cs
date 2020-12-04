@@ -8,6 +8,9 @@ using Android.Widget;
 using Android.OS;
 using MediaManager;
 using Android.Graphics;
+using System.Security.Cryptography.X509Certificates;
+using System.Net;
+using System.Net.Security;
 
 namespace RadioApp.Droid
 {
@@ -30,9 +33,12 @@ namespace RadioApp.Droid
            // CrossMediaManager.Current.Init(this,savedInstanceState);
             LoadApplication(new App());
 
+
             //Make Statusbar black
             Window.SetStatusBarColor(Color.DarkGray);
         }
+
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

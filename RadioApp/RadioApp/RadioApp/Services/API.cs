@@ -4,6 +4,7 @@ using RadioApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -14,11 +15,17 @@ namespace RadioApp.Services
     {
         private HttpClient client;
 
+        private string databaseAPIIP = "10.142.65.152:5001";
         public API()
-        { 
-             client = new HttpClient();
+        {
+            //Self signed Certificate
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            client = new HttpClient(clientHandler);
             //Ignore bad certificate in .NET core 2.0
-            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            // System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 
 
@@ -37,7 +44,7 @@ namespace RadioApp.Services
             }
             var favorite = Mapper.Map(station);
 
-            string apiUrl = string.Format("https://localhost:44369/api/favorite/{0}", Application.Current.Properties["key"]);
+            string apiUrl = string.Format("https://{0}/api/favorite/{1}",databaseAPIIP,Application.Current.Properties["key"]);
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
             HttpRequestMessage request = new HttpRequestMessage
             {
@@ -64,7 +71,7 @@ namespace RadioApp.Services
                 return list;
             }
 
-            string apiUrl = string.Format("https://localhost:44369/api/favorite/{0}/all", Application.Current.Properties["key"]);
+            string apiUrl = string.Format("https://{0}/api/favorite/{1}/all", databaseAPIIP,Application.Current.Properties["key"]);
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
 
             var response = await client.GetAsync(uri).ConfigureAwait(false);
@@ -116,13 +123,14 @@ namespace RadioApp.Services
         public async Task<DtoAccount> Login(Account account)
         {
             account.Email = "";
-            string apiUrl = "http://localhost:5000/api/account/login";
+            string apiUrl = string.Format("https://{0}/api/account/login",databaseAPIIP);
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
+            var jsonData = JsonConvert.SerializeObject(account);
             HttpRequestMessage request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = uri,
-                Content = new StringContent(JsonConvert.SerializeObject(account), Encoding.UTF8, "application/json")
+                Content = new StringContent(jsonData, Encoding.UTF8, "application/json")
             };
             var response = await client.SendAsync(request).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
@@ -137,7 +145,7 @@ namespace RadioApp.Services
 
         public async Task<DtoAccount> Register(Account account)
         {
-            string apiUrl = "https://localhost:44369/api/account/register";
+            string apiUrl = string.Format("https://{0}/api/account/register",databaseAPIIP);
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
             HttpRequestMessage request = new HttpRequestMessage
             {
@@ -164,7 +172,7 @@ namespace RadioApp.Services
             }
             var favorite = Mapper.Map(station);
 
-            string apiUrl = string.Format("https://localhost:44369/api/favorite/{0}", Application.Current.Properties["key"]);
+            string apiUrl = string.Format("https://{}/api/favorite/{1}",databaseAPIIP, Application.Current.Properties["key"]);
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
             HttpRequestMessage request = new HttpRequestMessage
             {
