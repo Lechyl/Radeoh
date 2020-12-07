@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
 
         //Login
         // GET api/<AccountController>/login
-        [HttpGet("login")]
+        [HttpPost("login")]
         public async Task<ActionResult<DtoAccount>> Get([FromBody] Account account)
         {
             if(account == null)
@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
                 return BadRequest();
             }
             var dtoAccount = await db.Register(account);
-            if(dtoAccount == null)
+            if(dtoAccount == null || dtoAccount.Id == 0)
             {
                 return BadRequest();
             }

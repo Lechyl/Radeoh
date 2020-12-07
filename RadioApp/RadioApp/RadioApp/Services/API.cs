@@ -15,7 +15,7 @@ namespace RadioApp.Services
     {
         private HttpClient client;
 
-        private string databaseAPIIP = "10.142.65.152:5001";
+        private string databaseAPIIP = "10.142.67.205:5001";
         public API()
         {
             //Self signed Certificate
@@ -128,7 +128,7 @@ namespace RadioApp.Services
             var jsonData = JsonConvert.SerializeObject(account);
             HttpRequestMessage request = new HttpRequestMessage
             {
-                Method = HttpMethod.Get,
+                Method = HttpMethod.Post,
                 RequestUri = uri,
                 Content = new StringContent(jsonData, Encoding.UTF8, "application/json")
             };
@@ -172,7 +172,7 @@ namespace RadioApp.Services
             }
             var favorite = Mapper.Map(station);
 
-            string apiUrl = string.Format("https://{}/api/favorite/{1}",databaseAPIIP, Application.Current.Properties["key"]);
+            string apiUrl = string.Format("https://{0}/api/favorite/{1}",databaseAPIIP, Application.Current.Properties["key"]);
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
             HttpRequestMessage request = new HttpRequestMessage
             {
