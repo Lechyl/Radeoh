@@ -27,6 +27,12 @@ namespace RadioApp.Services
             // System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+            if (Application.Current.Properties.ContainsKey("token"))
+            {
+                client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", Application.Current.Properties["token"].ToString());
+            }
+
 
 
         }
@@ -122,6 +128,7 @@ namespace RadioApp.Services
 
         public async Task<DtoAccount> Login(Account account)
         {
+
             account.Email = "";
             string apiUrl = string.Format("https://{0}/api/account/login",databaseAPIIP);
             Uri uri = new Uri(string.Format(apiUrl, string.Empty));
@@ -137,7 +144,7 @@ namespace RadioApp.Services
             {
                 var content = await response.Content.ReadAsStringAsync();
                 DtoAccount dtoAccount = JsonConvert.DeserializeObject<DtoAccount>(content);
-
+                Application.Current.Properties["token"] = dtoAccount.Token;
                 return dtoAccount;
             }
             return null;
@@ -190,5 +197,7 @@ namespace RadioApp.Services
             }
             return false;
         }
+
+
     }
 }

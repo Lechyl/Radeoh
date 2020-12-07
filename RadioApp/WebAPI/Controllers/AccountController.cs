@@ -1,21 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using WebAPI.DAL;
+using WebAPI.Helper;
 using WebAPI.Models;
+
+
+
+using Microsoft.Extensions.Options;
+
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebAPI.Controllers
 {
+    [Authorize]
     [Route("api/account")]
     [ApiController]
     public class AccountController : ControllerBase
     {
 
         MySqlDatabase db = new MySqlDatabase();
+        private readonly AppSettings _appSettings;
+        public AccountController(IOptions<AppSettings> appSettings)
+        {
+            _appSettings = appSettings.Value;
+        }
+
         // GET: api/<AccountController>
         [AllowAnonymous]
         [HttpGet()]
@@ -26,6 +44,8 @@ namespace WebAPI.Controllers
 
         //Login
         // GET api/<AccountController>/login
+       // [AllowAnonymous]
+
         [HttpPost("login")]
         public async Task<ActionResult<DtoAccount>> Get([FromBody] Account account)
         {
@@ -40,11 +60,12 @@ namespace WebAPI.Controllers
                 Username = account.Username,
                 Password = account.Password
             };
-            var dbAccount = await db.Login(dtoAccount);
-            if(dbAccount == null)
+            // dtoAccount = await db.Login(dtoAccount);
+            if (dtoAccount == null)
             {
                 return BadRequest();
             }
+            dtoAccount.Token = Authenticate(dtoAccount.Id);
             
 
             return Ok(dtoAccount);
@@ -81,6 +102,24 @@ namespace WebAPI.Controllers
         {
             return NotFound();
 
+        }
+
+        private string Authenticate(int id)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+            return tokenString;
         }
     }
 }

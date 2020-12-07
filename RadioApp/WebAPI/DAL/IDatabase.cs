@@ -8,6 +8,7 @@ namespace WebAPI.DAL
 {
     interface IDatabase
     {
+        public Task<Account> GetByID(int id);
 
         Task<List<Favorite>> GetFavorites(int id);
 

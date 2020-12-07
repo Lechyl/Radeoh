@@ -91,6 +91,35 @@ namespace WebAPI.DAL
             }
         }
         */
+
+        public async Task<Account> GetByID(int id)
+        {
+            Account account = new Account();
+            using (MySqlConnection conn = new MySqlConnection(constring))
+            {
+                conn.Open();
+
+                string query = "SELECT email,username FROM Radio.Account where id = @id";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    MySqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                    if (reader.HasRows)
+                    {
+                        await reader.ReadAsync();
+                        account.Email = reader.GetString(0);
+                        account.Username = reader.GetString(1);
+
+                    }
+                    reader.Close();
+
+                }
+                await conn.CloseAsync();
+                return account;
+            }
+        }
         public async Task<bool> DeleteFavorite(int id,Favorite station)
         {
             using (MySqlConnection conn = new MySqlConnection(constring))
