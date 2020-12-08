@@ -21,7 +21,7 @@ using Microsoft.Extensions.Options;
 
 namespace WebAPI.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     [Route("api/account")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/<AccountController>
-        [AllowAnonymous]
+       
         [HttpGet()]
         public ActionResult Get()
         {
@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
         }
 
         //Login
-        // GET api/<AccountController>/login
+        // POST api/<AccountController>/login
        // [AllowAnonymous]
 
         [HttpPost("login")]
@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
                 Username = account.Username,
                 Password = account.Password
             };
-            // dtoAccount = await db.Login(dtoAccount);
+            dtoAccount = await db.Login(dtoAccount);
             if (dtoAccount == null)
             {
                 return BadRequest();
@@ -71,6 +71,7 @@ namespace WebAPI.Controllers
             return Ok(dtoAccount);
         }
 
+        
         //Register
         // POST api/<AccountController>/register
         [HttpPost("register")]
@@ -114,7 +115,7 @@ namespace WebAPI.Controllers
                 {
                     new Claim(ClaimTypes.Name, id.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddDays(100),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

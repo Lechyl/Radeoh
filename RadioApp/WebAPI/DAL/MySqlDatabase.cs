@@ -11,8 +11,8 @@ namespace WebAPI.DAL
     public class MySqlDatabase : IDatabase
     {
         private string constring = "Data Source=radiodb-instance-1.cn2dn4x7sadv.us-east-1.rds.amazonaws.com; Initial Catalog =Radio; User ID =admin; Password =Bu$F0rrud3";
-        /*
-        public async Task<bool> BulkSaveFavorites(Account account)
+        
+        public async Task<bool> BulkSaveFavorites(int id,List<Favorite> favorites)
         {
             //Get favorite from sqlite
 
@@ -23,7 +23,7 @@ namespace WebAPI.DAL
                 bool favoriteExist = false;
                 string query = "select * from Radio.Favorite where slug = @slug";
 
-                foreach (var item in sqlFavorites)
+                foreach (var item in favorites)
                 {
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
@@ -64,11 +64,10 @@ namespace WebAPI.DAL
                 }
 
                 var query2 = new StringBuilder("INSERT INTO Radio.Account_has_favorites(idAccount,slugFavorite)VALUES");
-                string id = Application.Current.Properties["tmpID"].ToString();
                 List<string> rows = new List<string>();
-                foreach (var item in sqlFavorites)
+                foreach (var item in favorites)
                 {
-                    rows.Add(string.Format("({0},'{1}')", int.Parse(id), MySqlHelper.EscapeString(item.Slug)));
+                    rows.Add(string.Format("({0},'{1}')", id, MySqlHelper.EscapeString(item.Slug)));
                 }
                 query2.Append(string.Join(",", rows));
 
@@ -90,7 +89,7 @@ namespace WebAPI.DAL
 
             }
         }
-        */
+        
 
         public async Task<Account> GetByID(int id)
         {

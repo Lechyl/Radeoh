@@ -21,6 +21,6 @@ namespace RadioApp.Services
         Task<DtoAccount> Register(Account account);
 
         //Only supported the next 3 months after start date.
-        Task<bool> BulkSaveFavorites(Account account);
+        Task<bool> BulkSaveFavorites(DtoAccount account);
     }
 }

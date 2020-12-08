@@ -17,12 +17,6 @@ namespace WebAPI.Controllers
     {
         MySqlDatabase db = new MySqlDatabase();
 
-        // GET: api/<FavoriteController>
-        [HttpGet]
-        public ActionResult Get()
-        {
-            return NotFound();
-        }
 
         // GET api/<FavoriteController>/{id}/all
         [HttpGet("{id}/all")]
@@ -38,6 +32,22 @@ namespace WebAPI.Controllers
                 return BadRequest();
             }
             return favoritelist;
+        }
+        [AllowAnonymous]
+        // POST: api/<FavoriteController>/{id}/bulk
+        [HttpPost("{id}/bulk")]
+        public async Task<ActionResult<bool>> BulkPostFavorite(int id,[FromBody] List<Favorite> favorites)
+        {
+            if(favorites == null)
+            {
+                return BadRequest();
+            }
+            var success = await db.BulkSaveFavorites(id, favorites);
+            if (!success)
+            {
+                return BadRequest();
+            }
+            return success;
         }
 
         // POST api/<FavoriteController>/{id}

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RadioApp.Converter;
+using RadioApp.DAL;
 using RadioApp.Models;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace RadioApp.Services
     {
         private HttpClient client;
 
-        private string databaseAPIIP = "10.142.67.205:5001";
+        private string databaseAPIIP = "10.142.74.149:5001";
         public API()
         {
             //Self signed Certificate
@@ -37,9 +38,27 @@ namespace RadioApp.Services
 
         }
 
-        public Task<bool> BulkSaveFavorites(Account account)
+        public async Task<bool> BulkSaveFavorites(DtoAccount account)
         {
-            throw new NotImplementedException();
+            SqliteDatabase sqlite = new SqliteDatabase();
+            var sqlitefavorites = await sqlite.GetFavorites();
+            string apiUrl = string.Format("https://{0}/api/favorite/{1}/bulk", databaseAPIIP, account.Id);
+            Uri uri = new Uri(string.Format(apiUrl, string.Empty));
+            HttpRequestMessage request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = uri,
+                Content = new StringContent(JsonConvert.SerializeObject(sqlitefavorites), Encoding.UTF8, "application/json")
+            };
+            var response = await client.SendAsync(request).ConfigureAwait(false);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var success = JsonConvert.DeserializeObject<bool>(content);
+
+                return success;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteFavorite( RadioStation station)
@@ -83,6 +102,7 @@ namespace RadioApp.Services
             var response = await client.GetAsync(uri).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
+                
                 var content = await response.Content.ReadAsStringAsync();
                 list = JsonConvert.DeserializeObject<List<Favorite>>(content);
 

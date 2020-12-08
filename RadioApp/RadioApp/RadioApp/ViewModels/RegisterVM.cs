@@ -70,7 +70,7 @@ namespace RadioApp.ViewModels
 
                                 if (saveData)
                                 {
-                                    await api.BulkSaveFavorites(User);
+                                    await api.BulkSaveFavorites(account);
                                 }
                                 Application.Current.Properties["tmpID"] = null;
                                 await Application.Current.SavePropertiesAsync();

@@ -55,6 +55,7 @@ namespace RadioApp.ViewModels
             {
                 Application.Current.Properties["name"] = null;
                 Application.Current.Properties["key"] = null;
+                Application.Current.Properties["token"] = null;
                 Application.Current.Properties.Clear();
                 await Application.Current.SavePropertiesAsync();
                 await Application.Current.MainPage.Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
